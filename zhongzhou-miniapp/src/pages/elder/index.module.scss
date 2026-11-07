@@ -1,0 +1,164 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+}
+
+.state {
+  min-height: 100vh;
+  padding: 160rpx $page-padding;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: $color-bg-page;
+}
+
+.stateText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.backButton {
+  @include button-reset;
+  width: 260rpx;
+  height: $button-height-md;
+  margin-top: $spacing-lg;
+  border-radius: $radius-button;
+  background: $color-primary-soft;
+  color: $color-primary-dark;
+  font-size: $font-size-sm;
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  padding: 40rpx $page-padding 120rpx;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+}
+
+.avatar {
+  width: 144rpx;
+  height: 144rpx;
+  border-radius: $radius-lg;
+  border: 4rpx solid rgba(255, 255, 255, 0.4);
+  flex-shrink: 0;
+  background: $color-bg-hover;
+}
+
+.heroInfo {
+  flex: 1;
+  margin-left: $spacing-md;
+  min-width: 0;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+}
+
+.name {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  margin-right: $spacing-sm;
+}
+
+.meta {
+  display: block;
+  margin-top: 8rpx;
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.location {
+  display: block;
+  margin-top: 4rpx;
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.content {
+  margin-top: -88rpx;
+  padding: 0 $page-padding calc(#{$spacing-xl} + env(safe-area-inset-bottom));
+}
+
+.card {
+  padding: $spacing-md $spacing-lg;
+  margin-bottom: $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+}
+
+.cardTitle {
+  display: block;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  margin-bottom: $spacing-sm;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 10rpx 0;
+  border-top: 2rpx solid $color-divider;
+}
+
+.rowLabel {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  flex-shrink: 0;
+}
+
+.rowValue {
+  margin-left: $spacing-md;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  text-align: right;
+  flex: 1;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  margin-top: $spacing-sm;
+}
+
+.actionPrimary {
+  @include button-reset;
+  flex: 1;
+  height: $button-height-lg;
+  border-radius: $radius-button;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.actionSecond {
+  @include button-reset;
+  flex: 1;
+  height: $button-height-lg;
+  margin-left: $spacing-sm;
+  border-radius: $radius-button;
+  background: $color-bg-card;
+  border: 2rpx solid $color-primary;
+  color: $color-primary-dark;
+  font-size: $font-size-md;
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.tip {
+  display: block;
+  margin-top: $spacing-md;
+  font-size: $font-size-xs;
+  color: $color-text-disabled;
+  text-align: center;
+}

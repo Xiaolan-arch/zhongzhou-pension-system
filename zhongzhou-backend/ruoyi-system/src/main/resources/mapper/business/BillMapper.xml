@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.BillMapper">
+
+	<resultMap type="Bill" id="BillResult">
+		<id     property="billId"       column="bill_id"      />
+		<result property="billNo"       column="bill_no"      />
+		<result property="elderId"      column="elder_id"     />
+		<result property="elderName"    column="elder_name"   />
+		<result property="checkinId"    column="checkin_id"   />
+		<result property="billMonth"    column="bill_month"   />
+		<result property="periodStart"  column="period_start" />
+		<result property="periodEnd"    column="period_end"   />
+		<result property="amount"       column="amount"       />
+		<result property="deposit"      column="deposit"      />
+		<result property="prepaid"      column="prepaid"      />
+		<result property="paidAmount"   column="paid_amount"  />
+		<result property="penaltyAmount" column="penalty_amount" />
+		<result property="payStatus"    column="pay_status"   />
+		<result property="payTime"      column="pay_time"     />
+		<result property="payMethod"    column="pay_method"   />
+		<result property="payVoucher"   column="pay_voucher"  />
+		<result property="billType"     column="bill_type"    />
+		<result property="tenantId"     column="tenant_id"    />
+		<result property="createBy"     column="create_by"    />
+		<result property="createTime"   column="create_time"  />
+		<result property="updateBy"     column="update_by"    />
+		<result property="updateTime"   column="update_time"  />
+		<result property="remark"       column="remark"       />
+		<!-- 非数据库字段：月度费用（从 biz_checkin.fee_standard JOIN 而来） -->
+		<result property="monthlyFee"   column="monthly_fee"   />
+	</resultMap>
+
+	<resultMap type="BillItem" id="BillItemResult">
+		<id     property="itemId"         column="item_id"         />
+		<result property="billId"         column="bill_id"         />
+		<result property="itemType"       column="item_type"       />
+		<result property="feeName"        column="fee_name"        />
+		<result property="serviceContent" column="service_content" />
+		<result property="amount"         column="amount"          />
+		<result property="tenantId"       column="tenant_id"       />
+		<result property="createTime"     column="create_time"     />
+	</resultMap>
+
+	<sql id="selectBillVo">
+		select bill_id, bill_no, elder_id, elder_name, checkin_id, bill_month, period_start, period_end,
+			   amount, deposit, prepaid, paid_amount, penalty_amount, pay_status, pay_time, pay_method, pay_voucher,
+			   bill_type, tenant_id, create_by, create_time, update_by, update_time, remark
+		from biz_bill
+	</sql>
+
+	<select id="selectBillList" parameterType="Bill" resultMap="BillResult">
+		<include refid="selectBillVo"/>
+		where del_flag = '0'
+		<if test="elderId != null">
+			and elder_id = #{elderId}
+		</if>
+		<if test="elderName != null and elderName != ''">
+			and elder_name like concat('%', #{elderName}, '%')
+		</if>
+		<if test="payStatus != null and payStatus != ''">
+			and pay_status = #{payStatus}
+		</if>
+		<if test="billMonth != null and billMonth != ''">
+			and bill_month = #{billMonth}
+		</if>
+		order by bill_id desc
+	</select>
+
+	<select id="selectBillById" parameterType="Long" resultMap="BillResult">
+		<include refid="selectBillVo"/>
+		where bill_id = #{billId} and del_flag = '0'
+	</select>
+
+	<select id="selectBillItemsByBillId" parameterType="Long" resultMap="BillItemResult">
+		select item_id, bill_id, item_type, fee_name, service_content, amount, tenant_id, create_time
+		from biz_bill_item
+		where bill_id = #{billId}
+		order by item_id asc
+	</select>
+
+	<select id="selectEldersForMonthlyBill" resultMap="BillResult">
+		select e.elder_id, e.elder_name, e.tenant_id,
+		       c.checkin_id, c.fee_standard as monthly_fee
+		from biz_elder e
+		left join biz_checkin c
+			on c.tenant_id = e.tenant_id and c.del_flag = '0' and c.apply_status = '6'
+			and c.elder_name = e.elder_name
+			and c.checkin_id = (
+				select c2.checkin_id from biz_checkin c2
+				where c2.tenant_id = e.tenant_id and c2.del_flag = '0'
+					and c2.apply_status = '6' and c2.elder_name = e.elder_name
+				order by ifnull(c2.checkin_date, c2.create_time) desc, c2.checkin_id desc
+				limit 1
+			)
+		where e.tenant_id = #{tenantId} and e.status = '0' and e.del_flag = '0'
+		and not exists (
+			select 1 from biz_bill b
+			where b.tenant_id = #{tenantId} and b.elder_id = e.elder_id
+				and b.bill_type = '1' and b.bill_month = #{billMonth} and b.del_flag = '0'
+		)
+		order by e.elder_id asc
+	</select>
+
+	<select id="selectFirstBillByCheckinId" resultMap="BillResult">
+		<include refid="selectBillVo"/>
+		where checkin_id = #{checkinId} and bill_type = '0' and del_flag = '0'
+		limit 1
+	</select>
+
+	<select id="selectUnpaidCountByElder" resultType="int">
+		select count(1) from biz_bill
+		where elder_id = #{elderId} and tenant_id = #{tenantId} and pay_status = '0' and del_flag = '0'
+	</select>
+
+	<insert id="insertBill" parameterType="Bill" useGeneratedKeys="true" keyProperty="billId">
+		insert into biz_bill(
+			bill_no, elder_id, elder_name, checkin_id, bill_month, period_start, period_end,
+			amount, deposit, prepaid, paid_amount, pay_status, pay_time, pay_method, pay_voucher,
+			bill_type, tenant_id, del_flag, create_by, create_time, remark
+		)values(
+			#{billNo}, #{elderId}, #{elderName}, #{checkinId}, #{billMonth}, #{periodStart}, #{periodEnd},
+			#{amount}, #{deposit}, #{prepaid}, #{paidAmount}, #{payStatus}, #{payTime}, #{payMethod}, #{payVoucher},
+			#{billType}, #{tenantId}, '0', #{createBy}, sysdate(), #{remark}
+		)
+	</insert>
+
+	<!-- 批量新增月度账单：一条 INSERT 拼多行，减少与数据库的交互次数 -->
+	<insert id="insertBillBatch">
+		insert into biz_bill(
+			bill_no, elder_id, elder_name, checkin_id, bill_month, period_start, period_end,
+			amount, deposit, prepaid, paid_amount, pay_status, pay_time, pay_method,
+			bill_type, tenant_id, del_flag, create_by, create_time
+		)values
+		<foreach collection="list" item="item" separator=",">
+			(
+				#{item.billNo}, #{item.elderId}, #{item.elderName}, #{item.checkinId,jdbcType=BIGINT},
+				#{item.billMonth}, #{item.periodStart}, #{item.periodEnd}, #{item.amount},
+				#{item.deposit}, #{item.prepaid}, #{item.paidAmount}, #{item.payStatus},
+				#{item.payTime,jdbcType=TIMESTAMP}, #{item.payMethod,jdbcType=VARCHAR},
+				#{item.billType}, #{item.tenantId}, '0', #{item.createBy}, sysdate()
+			)
+		</foreach>
+	</insert>
+
+	<!-- 已生成月度账单的入住申请ID（仅统计 bill_type='1'，避免首期账单误判） -->
+	<select id="selectExistingCheckinIds" resultType="java.lang.Long">
+		select checkin_id from biz_bill
+		where tenant_id = #{tenantId} and bill_month = #{billMonth}
+			and bill_type = '1' and del_flag = '0' and checkin_id is not null
+	</select>
+
+	<!-- 已生成月度账单的老人ID（用于 checkinId 为空的历史数据兜底判断） -->
+	<select id="selectExistingElderIds" resultType="java.lang.Long">
+		select elder_id from biz_bill
+		where tenant_id = #{tenantId} and bill_month = #{billMonth}
+			and bill_type = '1' and del_flag = '0'
+	</select>
+
+	<update id="updateBillPay" parameterType="Bill">
+		update biz_bill
+		set paid_amount = #{paidAmount},
+			pay_status   = #{payStatus},
+			pay_method   = #{payMethod},
+			pay_voucher  = #{payVoucher},
+			pay_time     = CASE WHEN #{payStatus} = '1' THEN sysdate() ELSE pay_time END,
+			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			update_time  = sysdate()
+		where bill_id = #{billId}
+		  and pay_status in ('0', '3')
+		  and paid_amount = #{oldPaidAmount}
+	</update>
+
+	<!-- 退款：扣减已收金额并重置支付状态，乐观锁保证并发安全 -->
+	<update id="updateBillRefund" parameterType="Bill">
+		update biz_bill
+		set paid_amount = #{paidAmount},
+			pay_status   = #{payStatus},
+			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			update_time  = sysdate()
+		where bill_id = #{billId}
+		  and paid_amount = #{oldPaidAmount}
+	</update>
+
+	<!-- 逾期账单：超过 period_end 30天以上未付清（pay_status != '1'） -->
+	<select id="selectOverdueBills" parameterType="map" resultMap="BillResult">
+		<include refid="selectBillVo"/>
+		where del_flag = '0'
+		  and pay_status != '1'
+		  and period_end <![CDATA[ < ]]> date_sub(curdate(), interval 30 day)
+		<if test="tenantId != null">
+			and tenant_id = #{tenantId}
+		</if>
+		order by period_end asc
+	</select>
+
+	<!-- 逾期且未结清的账单（供滞纳金定时重算，宽限期按天传入） -->
+	<select id="selectBillsForPenalty" parameterType="map" resultMap="BillResult">
+		<include refid="selectBillVo"/>
+		where del_flag = '0'
+		  and pay_status in ('0', '3')
+		  and period_end <![CDATA[ < ]]> date_sub(curdate(), interval #{graceDays} day)
+		order by bill_id asc
+	</select>
+
+	<!-- 写入滞纳金计算结果 -->
+	<update id="updateBillPenalty" parameterType="Bill">
+		update biz_bill
+		set penalty_amount = #{penaltyAmount},
+			penalty_time   = sysdate(),
+			update_time    = sysdate()
+		where bill_id = #{billId}
+		  and pay_status in ('0', '3')
+	</update>
+
+	<!-- 查询账单应付剩余金额 = amount - prepaid - paid_amount - 减项小计 -->
+	<select id="selectBillPayable" parameterType="map" resultType="java.math.BigDecimal">
+		select (b.amount - ifnull(b.prepaid, 0) - ifnull(b.paid_amount, 0)
+		        - ifnull((select sum(bi.amount) from biz_bill_item bi where bi.bill_id = b.bill_id and bi.item_type = '2'), 0))
+		from biz_bill b
+		where b.bill_id = #{billId} and b.del_flag = '0'
+	</select>
+
+	<update id="deleteBillByIds">
+		update biz_bill set del_flag = '2', update_time = sysdate()
+		where bill_id in
+		<foreach collection="array" item="billId" open="(" separator="," close=")">
+			#{billId}
+		</foreach>
+	</update>
+
+</mapper>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.LeaveMapper">
+
+	<resultMap type="Leave" id="LeaveResult">
+		<id     property="leaveId"      column="leave_id"      />
+		<result property="elderId"      column="elder_id"      />
+		<result property="elderName"    column="elder_name"    />
+		<result property="tenantId"     column="tenant_id"     />
+		<result property="leaveType"    column="leave_type"    />
+		<result property="startTime"    column="start_time"    />
+		<result property="endTime"      column="end_time"      />
+		<result property="reason"       column="reason"        />
+		<result property="contactPhone" column="contact_phone" />
+		<result property="status"       column="status"        />
+		<result property="auditOpinion" column="audit_opinion" />
+		<result property="auditBy"      column="audit_by"      />
+		<result property="auditTime"    column="audit_time"    />
+		<result property="backTime"     column="back_time"     />
+		<result property="delFlag"      column="del_flag"      />
+		<result property="createBy"     column="create_by"     />
+		<result property="createTime"   column="create_time"   />
+		<result property="updateBy"     column="update_by"     />
+		<result property="updateTime"   column="update_time"   />
+	</resultMap>
+
+	<sql id="selectLeaveVo">
+		select leave_id, elder_id, elder_name, tenant_id, leave_type, start_time, end_time,
+		       reason, contact_phone, status, audit_opinion, audit_by, audit_time, back_time,
+		       del_flag, create_by, create_time, update_by, update_time
+		from biz_leave
+	</sql>
+
+	<select id="selectLeaveList" parameterType="Leave" resultMap="LeaveResult">
+		<include refid="selectLeaveVo"/>
+		<where>
+			del_flag = '0'
+			<if test="tenantId != null">
+				AND tenant_id = #{tenantId}
+			</if>
+			<if test="elderId != null">
+				AND elder_id = #{elderId}
+			</if>
+			<if test="elderName != null and elderName != ''">
+				AND elder_name like concat('%', #{elderName}, '%')
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="leaveType != null and leaveType != ''">
+				AND leave_type = #{leaveType}
+			</if>
+		</where>
+		order by leave_id desc
+	</select>
+
+	<select id="selectLeaveById" parameterType="Long" resultMap="LeaveResult">
+		<include refid="selectLeaveVo"/>
+		where leave_id = #{leaveId} and del_flag = '0'
+	</select>
+
+	<insert id="insertLeave" parameterType="Leave" useGeneratedKeys="true" keyProperty="leaveId">
+		insert into biz_leave(
+			elder_id,
+			<if test="elderName != null">elder_name,</if>
+			tenant_id,
+			<if test="leaveType != null">leave_type,</if>
+			start_time,
+			end_time,
+			<if test="reason != null">reason,</if>
+			<if test="contactPhone != null">contact_phone,</if>
+			<if test="status != null">status,</if>
+			del_flag,
+			<if test="createBy != null">create_by,</if>
+			create_time
+		)values(
+			#{elderId},
+			<if test="elderName != null">#{elderName},</if>
+			#{tenantId},
+			<if test="leaveType != null">#{leaveType},</if>
+			#{startTime},
+			#{endTime},
+			<if test="reason != null">#{reason},</if>
+			<if test="contactPhone != null">#{contactPhone},</if>
+			<if test="status != null">#{status},</if>
+			'0',
+			<if test="createBy != null">#{createBy},</if>
+			sysdate()
+		)
+	</insert>
+
+	<update id="updateLeave" parameterType="Leave">
+		update biz_leave
+		<set>
+			<if test="leaveType != null">leave_type = #{leaveType},</if>
+			<if test="startTime != null">start_time = #{startTime},</if>
+			<if test="endTime != null">end_time = #{endTime},</if>
+			<if test="reason != null">reason = #{reason},</if>
+			<if test="contactPhone != null">contact_phone = #{contactPhone},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="auditOpinion != null">audit_opinion = #{auditOpinion},</if>
+			<if test="updateBy != null">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		</set>
+		where leave_id = #{leaveId}
+	</update>
+
+	<update id="deleteLeaveByIds" parameterType="Long">
+		update biz_leave set del_flag = '2' where leave_id in
+		<foreach collection="array" item="leaveId" open="(" separator="," close=")">
+			#{leaveId}
+		</foreach>
+	</update>
+
+	<update id="auditLeave">
+		update biz_leave
+		set status = #{status},
+			audit_opinion = #{auditOpinion},
+			audit_by = #{auditBy},
+			audit_time = sysdate(),
+			update_by = #{auditBy},
+			update_time = sysdate()
+		where leave_id = #{leaveId} and status = '0' and del_flag = '0'
+	</update>
+
+	<update id="confirmBack">
+		update biz_leave
+		set status = '3',
+			back_time = sysdate(),
+			update_by = #{updateBy},
+			update_time = sysdate()
+		where leave_id = #{leaveId} and status = '1' and del_flag = '0'
+	</update>
+
+	<update id="updateBedStatusByElder">
+		update biz_bed
+		set status = #{status},
+			update_time = sysdate()
+		where elder_id = #{elderId} and tenant_id = #{tenantId} and del_flag = '0'
+	</update>
+
+</mapper>

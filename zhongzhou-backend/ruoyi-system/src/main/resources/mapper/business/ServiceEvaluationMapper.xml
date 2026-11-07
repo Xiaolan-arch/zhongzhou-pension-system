@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.ServiceEvaluationMapper">
+
+	<resultMap type="ServiceEvaluation" id="ServiceEvaluationResult">
+		<id     property="evalId"      column="eval_id"      />
+		<result property="tenantId"    column="tenant_id"    />
+		<result property="orderId"     column="order_id"     />
+		<result property="orderNo"     column="order_no"     />
+		<result property="elderId"     column="elder_id"     />
+		<result property="elderName"   column="elder_name"   />
+		<result property="familyId"    column="family_id"    />
+		<result property="familyName"  column="family_name"  />
+		<result property="phone"       column="phone"        />
+		<result property="rating"      column="rating"       />
+		<result property="content"     column="content"      />
+		<result property="createBy"    column="create_by"    />
+		<result property="createTime"  column="create_time"  />
+	</resultMap>
+
+	<sql id="selectEvaluationVo">
+		select eval_id, tenant_id, order_id, order_no, elder_id, elder_name, family_id, family_name,
+		       phone, rating, content, create_by, create_time
+		from biz_service_evaluation
+	</sql>
+
+	<select id="selectByOrderAndFamily" resultMap="ServiceEvaluationResult">
+		<include refid="selectEvaluationVo"/>
+		where order_id = #{orderId} and family_id = #{familyId} and tenant_id = #{tenantId}
+		  and del_flag = '0'
+		limit 1
+	</select>
+
+	<insert id="insertEvaluation" parameterType="ServiceEvaluation" useGeneratedKeys="true" keyProperty="evalId">
+		insert into biz_service_evaluation
+		(tenant_id, order_id, order_no, elder_id, elder_name, family_id, family_name, phone,
+		 rating, content, create_by, create_time, del_flag)
+		values
+		(#{tenantId}, #{orderId}, #{orderNo}, #{elderId}, #{elderName}, #{familyId}, #{familyName}, #{phone},
+		 #{rating}, #{content}, #{createBy}, sysdate(), '0')
+	</insert>
+
+</mapper>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.CheckoutMapper">
+
+	<resultMap type="Checkout" id="CheckoutResult">
+		<id     property="checkoutId"     column="checkout_id"      />
+		<result property="applyNo"        column="apply_no"         />
+		<result property="elderId"        column="elder_id"         />
+		<result property="elderName"      column="elder_name"       />
+		<result property="checkoutDate"   column="checkout_date"    />
+		<result property="reason"         column="reason"           />
+		<result property="applyStatus"    column="apply_status"     />
+		<result property="audit1Result"   column="audit1_result"    />
+		<result property="audit1Opinion"  column="audit1_opinion"   />
+		<result property="audit1By"       column="audit1_by"        />
+		<result property="audit1Time"     column="audit1_time"      />
+		<result property="terminateDate"  column="terminate_date"   />
+		<result property="terminateFile"  column="terminate_file"   />
+		<result property="adjustAmount"   column="adjust_amount"    />
+		<result property="adjustRemark"   column="adjust_remark"    />
+		<result property="audit2Result"   column="audit2_result"    />
+		<result property="audit2Opinion"  column="audit2_opinion"   />
+		<result property="audit2By"       column="audit2_by"        />
+		<result property="audit2Time"     column="audit2_time"      />
+		<result property="audit3Result"   column="audit3_result"    />
+		<result property="audit3Opinion"  column="audit3_opinion"   />
+		<result property="audit3By"       column="audit3_by"        />
+		<result property="audit3Time"     column="audit3_time"      />
+		<result property="settleAmount"   column="settle_amount"    />
+		<result property="refundMethod"   column="refund_method"    />
+		<result property="settleTime"     column="settle_time"      />
+		<result property="tenantId"       column="tenant_id"        />
+		<result property="createBy"       column="create_by"        />
+		<result property="createTime"     column="create_time"      />
+		<result property="updateBy"       column="update_by"        />
+		<result property="updateTime"     column="update_time"      />
+		<result property="remark"         column="remark"           />
+	</resultMap>
+
+	<sql id="selectCheckoutVo">
+		select checkout_id, apply_no, elder_id, elder_name, checkout_date, reason, apply_status,
+			   audit1_result, audit1_opinion, audit1_by, audit1_time, terminate_date, terminate_file,
+			   adjust_amount, adjust_remark, audit2_result, audit2_opinion, audit2_by, audit2_time,
+			   audit3_result, audit3_opinion, audit3_by, audit3_time, settle_amount, refund_method,
+			   settle_time, tenant_id, create_by, create_time, update_by, update_time, remark
+		from biz_checkout
+	</sql>
+
+	<select id="selectCheckoutList" parameterType="Checkout" resultMap="CheckoutResult">
+		<include refid="selectCheckoutVo"/>
+		where del_flag = '0'
+		<if test="elderName != null and elderName != ''">
+			and elder_name like concat('%', #{elderName}, '%')
+		</if>
+		<if test="applyStatus != null and applyStatus != ''">
+			and apply_status = #{applyStatus}
+		</if>
+		order by checkout_id desc
+	</select>
+
+	<select id="selectCheckoutById" parameterType="Long" resultMap="CheckoutResult">
+		<include refid="selectCheckoutVo"/>
+		where checkout_id = #{checkoutId} and del_flag = '0'
+	</select>
+
+	<select id="selectElderNameById" resultType="String">
+		select elder_name from biz_elder
+		where elder_id = #{elderId} and tenant_id = #{tenantId} and del_flag = '0'
+		limit 1
+	</select>
+
+	<insert id="insertCheckout" parameterType="Checkout" useGeneratedKeys="true" keyProperty="checkoutId">
+		insert into biz_checkout(
+			apply_no, elder_id, elder_name, checkout_date, reason, apply_status,
+			tenant_id, del_flag, create_by, create_time, remark
+		)values(
+			#{applyNo}, #{elderId}, #{elderName}, #{checkoutDate}, #{reason}, #{applyStatus},
+			#{tenantId}, '0', #{createBy}, sysdate(), #{remark}
+		)
+	</insert>
+
+	<update id="updateCheckout" parameterType="Checkout">
+		update biz_checkout
+		<set>
+			<if test="elderId != null">elder_id = #{elderId},</if>
+			<if test="elderName != null">elder_name = #{elderName},</if>
+			<if test="checkoutDate != null">checkout_date = #{checkoutDate},</if>
+			<if test="reason != null">reason = #{reason},</if>
+			<if test="audit1Result != null">audit1_result = #{audit1Result},</if>
+			<if test="audit1Opinion != null">audit1_opinion = #{audit1Opinion},</if>
+			<if test="audit1By != null">audit1_by = #{audit1By},</if>
+			<if test="audit1Time != null">audit1_time = #{audit1Time},</if>
+			<if test="terminateDate != null">terminate_date = #{terminateDate},</if>
+			<if test="terminateFile != null">terminate_file = #{terminateFile},</if>
+			<if test="adjustAmount != null">adjust_amount = #{adjustAmount},</if>
+			<if test="adjustRemark != null">adjust_remark = #{adjustRemark},</if>
+			<if test="audit2Result != null">audit2_result = #{audit2Result},</if>
+			<if test="audit2Opinion != null">audit2_opinion = #{audit2Opinion},</if>
+			<if test="audit2By != null">audit2_by = #{audit2By},</if>
+			<if test="audit2Time != null">audit2_time = #{audit2Time},</if>
+			<if test="audit3Result != null">audit3_result = #{audit3Result},</if>
+			<if test="audit3Opinion != null">audit3_opinion = #{audit3Opinion},</if>
+			<if test="audit3By != null">audit3_by = #{audit3By},</if>
+			<if test="audit3Time != null">audit3_time = #{audit3Time},</if>
+			<if test="remark != null">remark = #{remark},</if>
+			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		</set>
+		where checkout_id = #{checkoutId}
+	</update>
+
+	<update id="updateCheckoutStatus">
+		update biz_checkout
+		set apply_status = #{newStatus}, update_by = #{updateBy}, update_time = sysdate()
+		where checkout_id = #{checkoutId} and apply_status = #{oldStatus}
+	</update>
+
+	<update id="updateCheckoutComplete" parameterType="Checkout">
+		update biz_checkout
+		set apply_status = '7', settle_amount = #{settleAmount}, refund_method = #{refundMethod},
+			settle_time = sysdate(),
+			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		where checkout_id = #{checkoutId} and apply_status = '6'
+	</update>
+
+	<update id="deleteCheckoutByIds">
+		update biz_checkout set del_flag = '2', update_time = sysdate()
+		where checkout_id in
+		<foreach collection="array" item="checkoutId" open="(" separator="," close=")">
+			#{checkoutId}
+		</foreach>
+	</update>
+
+</mapper>

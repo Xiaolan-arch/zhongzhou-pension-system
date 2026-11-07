@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.FamilyMapper">
+
+	<resultMap type="FamilyMember" id="FamilyResult">
+		<id     property="familyId"   column="family_id"   />
+		<result property="familyName" column="family_name" />
+		<result property="phone"      column="phone"       />
+		<result property="openid"     column="openid"      />
+		<result property="relation"   column="relation"    />
+		<result property="elderId"    column="elder_id"    />
+		<result property="status"     column="status"      />
+		<result property="remark"     column="remark"      />
+		<result property="tenantId"   column="tenant_id"   />
+		<result property="elderName"  column="elder_name"  />
+		<result property="floorNo"    column="floor_no"    />
+		<result property="roomNo"     column="room_no"     />
+		<result property="bedNo"      column="bed_no"      />
+		<result property="createTime" column="create_time" />
+	</resultMap>
+
+	<resultMap type="com.ruoyi.business.domain.vo.FamilyElderVO" id="FamilyElderResult">
+		<id     property="elderId"        column="elder_id"        />
+		<result property="elderName"      column="elder_name"      />
+		<result property="gender"         column="gender"          />
+		<result property="age"            column="age"             />
+		<result property="birthday"       column="birthday"        />
+		<result property="idCard"         column="id_card"         />
+		<result property="address"        column="address"         />
+		<result property="phone"          column="phone"           />
+		<result property="careLevel"      column="care_level"      />
+		<result property="checkinDate"    column="checkin_date"    />
+		<result property="status"         column="status"          />
+		<result property="avatar"         column="avatar"          />
+		<result property="familyName"     column="family_name"     />
+		<result property="familyRelation" column="family_relation" />
+		<result property="floorNo"        column="floor_no"        />
+		<result property="roomNo"         column="room_no"         />
+		<result property="bedNo"          column="bed_no"          />
+		<result property="nurseNames"     column="nurse_names"     />
+	</resultMap>
+
+	<resultMap type="ServiceOrder" id="ServiceOrderResult">
+		<id     property="orderId"     column="order_id"     />
+		<result property="orderNo"     column="order_no"     />
+		<result property="elderId"     column="elder_id"     />
+		<result property="elderName"   column="elder_name"   />
+		<result property="itemId"      column="item_id"      />
+		<result property="itemName"    column="item_name"    />
+		<result property="nurseId"     column="nurse_id"     />
+		<result property="nurseName"   column="nurse_name"   />
+		<result property="serviceTime" column="service_time" />
+		<result property="amount"      column="amount"       />
+		<result property="status"      column="status"       />
+		<result property="remark"      column="remark"       />
+		<result property="tenantId"    column="tenant_id"    />
+		<result property="createTime"  column="create_time"  />
+		<result property="taskId"      column="task_id"      />
+		<result property="taskStatus"  column="task_status"  />
+		<result property="taskFeedback" column="task_feedback" />
+	</resultMap>
+
+	<resultMap type="Deposit" id="DepositResult">
+		<id     property="depositId"    column="deposit_id"    />
+		<result property="elderId"      column="elder_id"      />
+		<result property="elderName"    column="elder_name"    />
+		<result property="depositType"  column="deposit_type"  />
+		<result property="amount"       column="amount"        />
+		<result property="payMethod"    column="pay_method"    />
+		<result property="remark"       column="remark"        />
+		<result property="operatorId"   column="operator_id"   />
+		<result property="operatorName" column="operator_name" />
+		<result property="tenantId"     column="tenant_id"     />
+		<result property="createTime"   column="create_time"   />
+	</resultMap>
+
+	<resultMap type="MessageLog" id="MessageLogResult">
+		<id     property="logId"       column="log_id"        />
+		<result property="tenantId"    column="tenant_id"     />
+		<result property="familyId"    column="family_id"     />
+		<result property="elderId"     column="elder_id"      />
+		<result property="elderName"   column="elder_name"    />
+		<result property="phone"       column="phone"         />
+		<result property="openid"      column="openid"        />
+		<result property="msgType"     column="msg_type"      />
+		<result property="title"       column="title"         />
+		<result property="content"     column="content"       />
+		<result property="sendStatus"  column="send_status"   />
+		<result property="errorMsg"    column="error_msg"     />
+		<result property="createTime"  column="create_time"   />
+	</resultMap>
+
+	<resultMap type="Bill" id="BillResult">
+		<id     property="billId"      column="bill_id"      />
+		<result property="billNo"      column="bill_no"      />
+		<result property="elderId"     column="elder_id"     />
+		<result property="elderName"   column="elder_name"   />
+		<result property="checkinId"   column="checkin_id"   />
+		<result property="billMonth"   column="bill_month"   />
+		<result property="periodStart" column="period_start" />
+		<result property="periodEnd"   column="period_end"   />
+		<result property="amount"      column="amount"       />
+		<result property="deposit"     column="deposit"      />
+		<result property="prepaid"     column="prepaid"      />
+		<result property="paidAmount"  column="paid_amount"  />
+		<result property="payStatus"   column="pay_status"   />
+		<result property="payTime"     column="pay_time"     />
+		<result property="payMethod"   column="pay_method"   />
+		<result property="payVoucher"  column="pay_voucher"  />
+		<result property="billType"    column="bill_type"    />
+		<result property="remark"      column="remark"       />
+		<result property="tenantId"    column="tenant_id"    />
+		<result property="createTime"  column="create_time"  />
+	</resultMap>
+
+	<resultMap type="BillItem" id="BillItemResult">
+		<id     property="itemId"         column="item_id"         />
+		<result property="billId"         column="bill_id"         />
+		<result property="itemType"       column="item_type"       />
+		<result property="feeName"        column="fee_name"        />
+		<result property="serviceContent" column="service_content" />
+		<result property="amount"         column="amount"          />
+		<result property="tenantId"       column="tenant_id"       />
+	</resultMap>
+
+	<resultMap type="HealthReport" id="ReportResult">
+		<id     property="reportId"    column="report_id"    />
+		<result property="elderId"     column="elder_id"     />
+		<result property="elderName"   column="elder_name"   />
+		<result property="reportType"  column="report_type"  />
+		<result property="reportTitle" column="report_title" />
+		<result property="periodStart" column="period_start" />
+		<result property="periodEnd"   column="period_end"   />
+		<result property="score"       column="score"        />
+		<result property="riskLevel"   column="risk_level"   />
+		<result property="summary"     column="summary"      />
+		<result property="content"     column="content"      />
+		<result property="modelSource" column="model_source" />
+		<result property="modelName"   column="model_name"   />
+		<result property="status"      column="status"       />
+		<result property="createTime"  column="create_time"  />
+	</resultMap>
+
+	<resultMap type="Visit" id="VisitResult">
+		<id     property="visitId"      column="visit_id"      />
+		<result property="visitType"    column="visit_type"    />
+		<result property="visitorName"  column="visitor_name"  />
+		<result property="visitorPhone" column="visitor_phone" />
+		<result property="elderId"      column="elder_id"      />
+		<result property="elderName"    column="elder_name"    />
+		<result property="visitDate"    column="visit_date"    />
+		<result property="visitTime"    column="visit_time"    />
+		<result property="peopleCount"  column="people_count"  />
+		<result property="status"       column="status"        />
+		<result property="visitCode"    column="visit_code"    />
+		<result property="checkinTime"  column="checkin_time"  />
+		<result property="remark"       column="remark"        />
+		<result property="tenantId"     column="tenant_id"     />
+		<result property="createTime"   column="create_time"   />
+	</resultMap>
+
+	<sql id="selectFamilyElderVo">
+		select e.elder_id, e.elder_name, e.gender, e.age, e.birthday, e.id_card, e.address, e.phone,
+		       e.care_level, e.checkin_date, e.status, e.avatar, e.family_name, e.family_relation,
+		       r.floor_no, r.room_no, b.bed_no,
+		       (select group_concat(n.nurse_name separator '、')
+		        from biz_bed_nurse bn
+		        join biz_nurse n on n.nurse_id = bn.nurse_id and n.tenant_id = bn.tenant_id
+		        where bn.bed_id = b.bed_id and bn.tenant_id = e.tenant_id) as nurse_names
+		from biz_family f
+		join biz_elder e on e.elder_id = f.elder_id and e.tenant_id = f.tenant_id and e.del_flag = '0'
+		left join biz_bed b on b.elder_id = e.elder_id and b.tenant_id = e.tenant_id and b.del_flag = '0'
+		left join biz_room r on r.room_id = b.room_id and r.tenant_id = e.tenant_id and r.del_flag = '0'
+	</sql>
+
+	<select id="selectFamiliesByPhone" resultMap="FamilyResult">
+		select family_id, family_name, phone, openid, relation, elder_id, status, remark, tenant_id
+		from biz_family
+		where phone = #{phone} and status = '0' and del_flag = '0'
+		order by family_id
+	</select>
+
+	<select id="selectFamiliesByElder" resultMap="FamilyResult">
+		select family_id, family_name, phone, openid, relation, elder_id, status, remark, tenant_id
+		from biz_family
+		where tenant_id = #{tenantId} and elder_id = #{elderId} and status = '0' and del_flag = '0'
+		order by family_id
+	</select>
+
+	<update id="updateOpenidByPhone">
+		update biz_family set openid = #{openid} where phone = #{phone} and del_flag = '0'
+	</update>
+
+	<update id="updateBillPay">
+		update biz_bill
+		set paid_amount = #{newPaid},
+			pay_status  = #{payStatus},
+			pay_method  = '0',
+			pay_time    = sysdate(),
+			update_by   = #{updateBy},
+			update_time = sysdate()
+		where bill_id = #{billId} and tenant_id = #{tenantId} and del_flag = '0'
+		  and ifnull(paid_amount, 0) = #{oldPaid}
+	</update>
+
+	<select id="selectEldersByPhone" resultMap="FamilyElderResult">
+		<include refid="selectFamilyElderVo"/>
+		where f.phone = #{phone} and f.status = '0' and f.del_flag = '0' and f.tenant_id = #{tenantId}
+		order by e.elder_id
+	</select>
+
+	<select id="selectElderDetail" resultMap="FamilyElderResult">
+		<include refid="selectFamilyElderVo"/>
+		where f.phone = #{phone} and f.status = '0' and f.del_flag = '0'
+		  and f.tenant_id = #{tenantId} and e.elder_id = #{elderId}
+	</select>
+
+	<select id="selectServiceOrders" resultMap="ServiceOrderResult">
+		select o.order_id, o.order_no, o.elder_id, o.elder_name, o.item_id, o.item_name,
+		       o.nurse_id, o.nurse_name, o.service_time, o.amount, o.status, o.remark,
+		       o.tenant_id, o.create_time,
+		       (select t.task_id from biz_service_task t
+		        where t.order_id = o.order_id and t.tenant_id = o.tenant_id and t.del_flag = '0'
+		        order by t.task_id desc limit 1) as task_id,
+		       (select t.task_status from biz_service_task t
+		        where t.order_id = o.order_id and t.tenant_id = o.tenant_id and t.del_flag = '0'
+		        order by t.task_id desc limit 1) as task_status,
+		       (select t.feedback from biz_service_task t
+		        where t.order_id = o.order_id and t.tenant_id = o.tenant_id and t.del_flag = '0'
+		        order by t.task_id desc limit 1) as task_feedback
+		from biz_service_order o
+		where o.elder_id = #{elderId} and o.tenant_id = #{tenantId} and o.del_flag = '0'
+		order by o.service_time desc, o.order_id desc
+		limit 100
+	</select>
+
+	<select id="selectServiceOrder" resultMap="ServiceOrderResult">
+		select o.order_id, o.order_no, o.elder_id, o.elder_name, o.item_id, o.item_name,
+		       o.nurse_id, o.nurse_name, o.service_time, o.amount, o.status, o.remark,
+		       o.tenant_id, o.create_time
+		from biz_service_order o
+		where o.order_id = #{orderId} and o.tenant_id = #{tenantId} and o.del_flag = '0'
+	</select>
+
+	<select id="selectDeposits" resultMap="DepositResult">
+		select deposit_id, elder_id, elder_name, deposit_type, amount, pay_method, remark,
+		       operator_id, operator_name, tenant_id, create_time
+		from biz_deposit
+		where elder_id = #{elderId} and tenant_id = #{tenantId} and del_flag = '0'
+		order by create_time desc, deposit_id desc
+		limit 100
+	</select>
+
+	<select id="selectDepositBalance" resultType="java.math.BigDecimal">
+		select ifnull(sum(case when deposit_type = '1' then amount else -amount end), 0)
+		from biz_deposit
+		where elder_id = #{elderId} and tenant_id = #{tenantId} and del_flag = '0'
+	</select>
+
+	<select id="selectMessages" resultMap="MessageLogResult">
+		select log_id, tenant_id, family_id, elder_id, elder_name, phone, openid, msg_type,
+		       title, content, send_status, error_msg, create_time
+		from biz_message_log
+		where phone = #{phone} and tenant_id = #{tenantId}
+		order by create_time desc, log_id desc
+		limit 100
+	</select>
+
+	<select id="selectBills" resultMap="BillResult">
+		select bill_id, bill_no, elder_id, elder_name, checkin_id, bill_month, period_start, period_end,
+		       amount, deposit, prepaid, paid_amount, pay_status, pay_time, pay_method, pay_voucher,
+		       bill_type, remark, tenant_id, create_time
+		from biz_bill
+		where elder_id = #{elderId} and tenant_id = #{tenantId} and del_flag = '0'
+		order by bill_month desc, bill_id desc
+		limit 100
+	</select>
+
+	<select id="selectBillById" resultMap="BillResult">
+		select bill_id, bill_no, elder_id, elder_name, checkin_id, bill_month, period_start, period_end,
+		       amount, deposit, prepaid, paid_amount, pay_status, pay_time, pay_method, pay_voucher,
+		       bill_type, remark, tenant_id, create_time
+		from biz_bill
+		where bill_id = #{billId} and tenant_id = #{tenantId} and del_flag = '0'
+	</select>
+
+	<select id="selectBillItems" resultMap="BillItemResult">
+		select item_id, bill_id, item_type, fee_name, service_content, amount, tenant_id
+		from biz_bill_item
+		where bill_id = #{billId} and tenant_id = #{tenantId}
+		order by item_id
+	</select>
+
+	<select id="selectReports" resultMap="ReportResult">
+		select report_id, elder_id, elder_name, report_type, report_title, period_start, period_end,
+		       score, risk_level, summary, model_source, model_name, status, create_time
+		from biz_health_report
+		where elder_id = #{elderId} and tenant_id = #{tenantId} and del_flag = '0' and status = '1'
+		order by create_time desc, report_id desc
+		limit 50
+	</select>
+
+	<select id="selectReportById" resultMap="ReportResult">
+		select report_id, elder_id, elder_name, report_type, report_title, period_start, period_end,
+		       score, risk_level, summary, content, model_source, model_name, status, create_time
+		from biz_health_report
+		where report_id = #{reportId} and tenant_id = #{tenantId} and del_flag = '0' and status = '1'
+	</select>
+
+	<select id="selectVisitsByPhone" resultMap="VisitResult">
+		select visit_id, visit_type, visitor_name, visitor_phone, elder_id, elder_name,
+		       visit_date, visit_time, people_count, status, visit_code, checkin_time, remark, tenant_id, create_time
+		from biz_visit
+		where visitor_phone = #{phone} and tenant_id = #{tenantId} and del_flag = '0'
+		order by visit_id desc
+		limit 100
+	</select>
+
+	<update id="cancelVisit">
+		update biz_visit set status = '3', update_by = #{phone}, update_time = sysdate()
+		where visit_id = #{visitId} and visitor_phone = #{phone} and tenant_id = #{tenantId}
+		  and status in ('0', '1')
+	</update>
+
+	<!-- ====================== 入住申请（家属视角） ====================== -->
+
+	<!-- 复用 CheckinMapper 中显式定义的映射（全局未开启下划线转驼峰，不能用 resultType 自动映射） -->
+	<select id="selectCheckinsByFamily" resultMap="com.ruoyi.business.mapper.CheckinMapper.CheckinResult">
+		select checkin_id, apply_no, elder_name, gender, age, phone, family_name, family_relation,
+		       family_phone, apply_status, suggest_care_level, room_id, bed_id, fee_standard,
+		       checkin_date, tenant_id, create_time
+		from biz_checkin
+		where family_phone = #{familyPhone} and tenant_id = #{tenantId} and del_flag = '0'
+		order by checkin_id desc
+		limit 50
+	</select>
+
+	<select id="selectCheckinDetailByFamily" resultMap="com.ruoyi.business.mapper.CheckinMapper.CheckinResult">
+		select checkin_id, apply_no, elder_name, gender, id_card, birthday, age, phone, address,
+		       family_name, family_relation, family_phone, apply_status, self_care, mental_state,
+		       disease, assessment_result, suggest_care_level, assessor, assess_time,
+		       audit_result, audit_opinion,
+		       room_id, bed_id, care_level, fee_standard, contract_no, contract_start, contract_end,
+		       contract_file, sign_date, pay_status, first_bill_id, checkin_date, tenant_id, create_time, update_time
+		from biz_checkin
+		where checkin_id = #{checkinId} and family_phone = #{familyPhone} and tenant_id = #{tenantId}
+		  and del_flag = '0'
+	</select>
+
+	<!-- 家属端在线确认签约：仅待签约(4)可签，签约后进入待缴费(5) -->
+	<update id="signCheckinByFamily">
+		update biz_checkin
+		set apply_status = '5', sign_date = curdate(),
+		    update_by = #{familyPhone}, update_time = sysdate()
+		where checkin_id = #{checkinId} and family_phone = #{familyPhone} and tenant_id = #{tenantId}
+		  and del_flag = '0' and apply_status = '4'
+	</update>
+
+	<update id="cancelCheckinByFamily">
+		update biz_checkin
+		set apply_status = '9', audit_opinion = '家属端主动撤销', audit_result = '1',
+		    auditor = family_phone, audit_time = sysdate(), update_by = #{familyPhone}, update_time = sysdate()
+		where checkin_id = #{checkinId} and family_phone = #{familyPhone} and tenant_id = #{tenantId}
+		  and del_flag = '0' and apply_status in ('0', '1', '9')
+	</update>
+
+	<!-- ====================== 绑定/解绑（家属视角） ====================== -->
+
+	<select id="selectBindingsByFamily" resultMap="FamilyResult">
+		select f.family_id, f.family_name, f.phone, f.relation, f.elder_id, f.status, f.tenant_id,
+		       f.create_time, e.elder_name, r.floor_no, r.room_no, b.bed_no
+		from biz_family f
+		join biz_elder e on e.elder_id = f.elder_id and e.tenant_id = f.tenant_id and e.del_flag = '0'
+		left join biz_bed b on b.bed_id = (select max(bed_id) from biz_bed
+		                                  where elder_id = e.elder_id and tenant_id = e.tenant_id and del_flag = '0')
+		left join biz_room r on r.room_id = b.room_id and r.tenant_id = e.tenant_id and r.del_flag = '0'
+		where f.phone = #{phone} and f.tenant_id = #{tenantId} and f.del_flag = '0' and f.status = '0'
+		order by f.family_id desc
+	</select>
+
+	<select id="selectEldersForBinding" resultMap="FamilyElderResult">
+		select e.elder_id, e.elder_name, e.gender, e.age, e.phone, e.status,
+		       r.floor_no, r.room_no, b.bed_no
+		from biz_elder e
+		left join biz_bed b on b.bed_id = (select max(bed_id) from biz_bed
+		                                  where elder_id = e.elder_id and tenant_id = e.tenant_id and del_flag = '0')
+		left join biz_room r on r.room_id = b.room_id and r.tenant_id = e.tenant_id and r.del_flag = '0'
+		where e.tenant_id = #{tenantId} and e.del_flag = '0'
+		  and e.elder_name = #{elderName}
+		order by e.status asc, e.elder_id asc
+		limit 20
+	</select>
+
+	<select id="selectElderForBindingById" resultMap="FamilyElderResult">
+		select e.elder_id, e.elder_name, e.gender, e.age, e.phone, e.status,
+		       r.floor_no, r.room_no, b.bed_no
+		from biz_elder e
+		left join biz_bed b on b.bed_id = (select max(bed_id) from biz_bed
+		                                  where elder_id = e.elder_id and tenant_id = e.tenant_id and del_flag = '0')
+		left join biz_room r on r.room_id = b.room_id and r.tenant_id = e.tenant_id and r.del_flag = '0'
+		where e.tenant_id = #{tenantId} and e.del_flag = '0' and e.elder_id = #{elderId}
+	</select>
+
+	<select id="selectBindingByFamilyAndElder" resultMap="FamilyResult">
+		select family_id, family_name, phone, relation, elder_id, status, tenant_id, create_time
+		from biz_family
+		where phone = #{phone} and elder_id = #{elderId} and tenant_id = #{tenantId}
+	</select>
+
+	<insert id="insertFamilyMember" parameterType="com.ruoyi.business.domain.FamilyMember"
+	        useGeneratedKeys="true" keyProperty="familyId">
+		insert into biz_family (family_name, phone, relation, elder_id, status, tenant_id, remark, create_time)
+		values (#{familyName}, #{phone}, #{relation}, #{elderId}, #{status}, #{tenantId}, #{remark}, sysdate())
+	</insert>
+
+	<update id="reactivateBinding">
+		update biz_family set status = '0', relation = #{relation}, update_time = sysdate()
+		where family_id = #{familyId}
+	</update>
+
+	<update id="unbindByFamilyAndElder">
+		update biz_family set status = '1', update_time = sysdate()
+		where phone = #{phone} and elder_id = #{elderId} and tenant_id = #{tenantId}
+	</update>
+
+</mapper>

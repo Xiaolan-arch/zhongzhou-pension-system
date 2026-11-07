@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.NurseMapper">
+
+	<resultMap type="Nurse" id="NurseResult">
+		<id     property="nurseId"    column="nurse_id"    />
+		<result property="nurseName"  column="nurse_name"  />
+		<result property="phone"      column="phone"       />
+		<result property="status"     column="status"      />
+		<result property="tenantId"   column="tenant_id"   />
+		<result property="delFlag"    column="del_flag"    />
+		<result property="createBy"   column="create_by"   />
+		<result property="createTime" column="create_time" />
+		<result property="updateBy"   column="update_by"   />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+
+	<sql id="selectNurseVo">
+		select nurse_id, nurse_name, phone, status, tenant_id, del_flag,
+		       create_by, create_time, update_by, update_time
+		from biz_nurse
+	</sql>
+
+	<select id="selectNurseList" parameterType="Nurse" resultMap="NurseResult">
+		<include refid="selectNurseVo"/>
+		<where>
+			del_flag = '0'
+			<if test="nurseName != null and nurseName != ''">
+				AND nurse_name like concat('%', #{nurseName}, '%')
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+		order by nurse_id
+	</select>
+
+	<select id="selectNurseById" parameterType="Long" resultMap="NurseResult">
+		<include refid="selectNurseVo"/>
+		where nurse_id = #{nurseId} and del_flag = '0'
+	</select>
+
+	<insert id="insertNurse" parameterType="Nurse" useGeneratedKeys="true" keyProperty="nurseId">
+		insert into biz_nurse(
+			nurse_name,
+			<if test="phone != null">phone,</if>
+			<if test="status != null">status,</if>
+			tenant_id,
+			del_flag,
+			create_by,
+			create_time
+		)values(
+			#{nurseName},
+			<if test="phone != null">#{phone},</if>
+			<if test="status != null">#{status},</if>
+			#{tenantId},
+			'0',
+			#{createBy},
+			sysdate()
+		)
+	</insert>
+
+	<update id="updateNurse" parameterType="Nurse">
+		update biz_nurse
+		<set>
+			<if test="nurseName != null and nurseName != ''">nurse_name = #{nurseName},</if>
+			<if test="phone != null">phone = #{phone},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		</set>
+		where nurse_id = #{nurseId}
+	</update>
+
+	<update id="deleteNurseByIds" parameterType="Long">
+		update biz_nurse set del_flag = '2' where nurse_id in
+		<foreach collection="array" item="nurseId" open="(" separator="," close=")">
+			#{nurseId}
+		</foreach>
+	</update>
+
+</mapper>

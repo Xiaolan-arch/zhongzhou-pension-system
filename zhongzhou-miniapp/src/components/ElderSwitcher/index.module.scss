@@ -1,0 +1,41 @@
+@use '@/styles/variables.scss' as *;
+
+.scroll {
+  @include scroll-x-container;
+  width: 100%;
+  margin-bottom: $spacing-md;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 64rpx;
+  min-width: 150rpx;
+  padding: 0 $spacing-md;
+  margin-right: $spacing-sm;
+  border-radius: $radius-button;
+  background: $color-bg-card;
+  border: 2rpx solid $color-border;
+}
+
+.activeChip {
+  background: $color-primary;
+  border-color: $color-primary;
+}
+
+.chipText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  white-space: nowrap;
+}
+
+.activeText {
+  color: $color-text-white;
+  font-weight: $font-weight-medium;
+}

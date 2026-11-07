@@ -1,0 +1,456 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+}
+
+.hero {
+  padding: 48rpx $page-padding 150rpx;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+}
+
+.hello {
+  display: block;
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+}
+
+.relation {
+  display: block;
+  margin-top: $spacing-xs;
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.content {
+  margin-top: -110rpx;
+  padding: 0 $page-padding $spacing-xl;
+}
+
+/* ====================== 顶部 Banner ====================== */
+.banner {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: $radius-lg;
+  box-shadow: 0 8rpx 24rpx rgba(47, 163, 107, 0.18);
+  margin-bottom: $spacing-md;
+}
+
+/* ====================== 入住咨询 ====================== */
+.consultCard {
+  display: flex;
+  align-items: center;
+  padding: $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+}
+
+.consultAvatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  background: #f3f6f4;
+  flex-shrink: 0;
+}
+
+.consultInfo {
+  flex: 1;
+  min-width: 0;
+  margin-left: $spacing-sm;
+}
+
+.consultTitle {
+  display: block;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-primary-dark;
+}
+
+.consultDesc {
+  display: block;
+  margin-top: 6rpx;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.consultBtn {
+  flex-shrink: 0;
+  padding: 14rpx 32rpx;
+  border-radius: $radius-button;
+  background: linear-gradient(135deg, $color-primary-light 0%, $color-primary 100%);
+  box-shadow: 0 6rpx 16rpx rgba(47, 163, 107, 0.28);
+  &:active { opacity: 0.86; }
+}
+
+.consultBtnText {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: #fff;
+}
+
+/* ====================== 彩色功能卡 ====================== */
+.featureRow {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: $spacing-md;
+}
+
+.featureCard {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md;
+  border-radius: $radius-lg;
+  min-width: 0;
+  &:active { transform: scale(0.98); opacity: 0.94; }
+}
+
+.featureGreen {
+  background: linear-gradient(135deg, #eef8f1 0%, #d9f0e2 100%);
+}
+
+.featureOrange {
+  background: linear-gradient(135deg, #fff3ea 0%, #ffe3d2 100%);
+}
+
+.featureText {
+  min-width: 0;
+  flex: 1;
+}
+
+.featureTitle {
+  display: block;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: #2f3b52;
+}
+
+.featureDesc {
+  display: block;
+  margin-top: 6rpx;
+  font-size: $font-size-xs;
+  color: #7a869c;
+  @include text-ellipsis;
+}
+
+.featureIcon {
+  width: 72rpx;
+  height: 72rpx;
+  flex-shrink: 0;
+  margin-left: $spacing-xs;
+}
+
+/* ====================== 四宫格 ====================== */
+.iconNav {
+  display: flex;
+  padding: $spacing-lg $spacing-xs;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+}
+
+.iconNavItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  &:active { opacity: 0.8; }
+}
+
+.iconNavImage {
+  width: 80rpx;
+  height: 80rpx;
+}
+
+.iconNavLabel {
+  margin-top: $spacing-xs;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  white-space: nowrap;
+}
+
+/* ====================== 客人态 ====================== */
+.guestHero {
+  background: linear-gradient(135deg, #fff8e7 0%, #fff 100%);
+  border: 2rpx solid #f5d28a;
+  border-radius: $radius-lg;
+  padding: 36rpx 28rpx;
+  margin-bottom: $spacing-md;
+}
+
+.guestTitle {
+  display: block;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: #b56a17;
+}
+
+.guestDesc {
+  display: block;
+  margin-top: 12rpx;
+  font-size: $font-size-sm;
+  color: #7a5c2b;
+  line-height: $line-height-loose;
+}
+
+.guestLoginBtn {
+  margin-top: 20rpx;
+  background: linear-gradient(135deg, $color-primary-light 0%, $color-primary 100%);
+  border-radius: $radius-button;
+  padding: 18rpx 40rpx;
+  display: inline-block;
+  &:active { opacity: 0.85; }
+}
+
+.guestLoginText {
+  color: #fff;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+}
+
+/* ====================== 老人数据 ====================== */
+.noElder {
+  padding: 48rpx;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+}
+
+.noElderText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.statsCard {
+  display: flex;
+  align-items: center;
+  padding: $spacing-lg $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-sm;
+}
+
+.statItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+
+.statValue {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-primary-dark;
+  @include text-ellipsis;
+  max-width: 100%;
+}
+
+.statLabel {
+  margin-top: 6rpx;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  white-space: nowrap;
+}
+
+.statDivider {
+  width: 2rpx;
+  height: 56rpx;
+  background: $color-divider;
+}
+
+.riskRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-sm $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  margin-bottom: $spacing-md;
+}
+
+.riskLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+/* ====================== 通用区块标题 ====================== */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: $spacing-lg 0 $spacing-md;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+}
+
+.sectionMore {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+/* ====================== 健康照护 ====================== */
+.healthRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.healthCard {
+  flex: 0 0 calc((100% - 40rpx) / 3);
+  padding: $spacing-md $spacing-sm;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  text-align: center;
+  min-width: 0;
+  box-sizing: border-box;
+  &:active { transform: scale(0.97); opacity: 0.92; }
+}
+
+.healthTitle {
+  display: block;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-primary-dark;
+}
+
+.healthDesc {
+  display: block;
+  margin-top: 6rpx;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  @include text-ellipsis;
+}
+
+/* ====================== 热门房型 ====================== */
+.roomList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.roomCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+  &:active { opacity: 0.94; }
+}
+
+.roomCover {
+  position: relative;
+}
+
+.roomImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: #eaf6ef;
+}
+
+.roomTag {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 10rpx 28rpx;
+  background: rgba(0, 0, 0, 0.55);
+  border-top-right-radius: $radius-md;
+}
+
+.roomTagText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: #fff;
+}
+
+.roomBadge {
+  position: absolute;
+  right: $spacing-sm;
+  top: $spacing-sm;
+  padding: 6rpx 18rpx;
+  border-radius: $radius-button;
+  background: rgba(47, 163, 107, 0.92);
+}
+
+.roomBadgeText {
+  font-size: $font-size-xs;
+  color: #fff;
+}
+
+.roomBody {
+  padding: $spacing-md;
+}
+
+.roomDesc {
+  display: block;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+  @include text-ellipsis-multi(2);
+}
+
+.roomFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: $spacing-sm;
+}
+
+.roomFooterText {
+  font-size: $font-size-xs;
+  color: $color-primary;
+}
+
+.roomFooterArrow {
+  margin-left: 6rpx;
+  font-size: $font-size-xs;
+  color: $color-primary;
+}
+
+.roomEmpty {
+  padding: $spacing-xl;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  text-align: center;
+}
+
+.roomEmptyText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+/* ====================== 照护提示 ====================== */
+.notice {
+  margin-top: $spacing-lg;
+  padding: $spacing-md;
+  background: $color-warning-soft;
+  border-radius: $radius-md;
+}
+
+.noticeTitle {
+  display: block;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: #b9702a;
+}
+
+.noticeText {
+  display: block;
+  margin-top: $spacing-xs;
+  font-size: $font-size-xs;
+  color: #8a6229;
+  line-height: $line-height-loose;
+}

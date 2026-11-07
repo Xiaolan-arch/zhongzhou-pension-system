@@ -1,0 +1,150 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  padding: 0 $page-padding calc(#{$spacing-xl} + env(safe-area-inset-bottom));
+  background: $color-bg-page;
+}
+
+.header {
+  padding: $spacing-lg 0 $spacing-md;
+}
+
+.title {
+  display: block;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+}
+
+.subtitle {
+  display: block;
+  margin-top: 6rpx;
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.state {
+  padding: 80rpx 0;
+  text-align: center;
+}
+
+.stateText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.balanceCard {
+  padding: $spacing-xl $spacing-lg;
+  margin-bottom: $spacing-md;
+  border-radius: $radius-lg;
+  background: linear-gradient(135deg, #2fa36b 0%, #5bc08d 100%);
+  box-shadow: 0 12rpx 30rpx rgba(47, 163, 107, 0.22);
+}
+
+.balanceLabel {
+  display: block;
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.balanceValue {
+  display: block;
+  margin-top: 8rpx;
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: #ffffff;
+}
+
+.balanceNote {
+  display: block;
+  margin-top: $spacing-sm;
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: $line-height-loose;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: $spacing-lg 0 $spacing-sm;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+}
+
+.sectionTip {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.card {
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-sm;
+}
+
+.cardTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+}
+
+.amountIn {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-primary-dark;
+}
+
+.amountOut {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-error;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6rpx 0;
+}
+
+.rowLabel {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.rowValue {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.remark {
+  display: block;
+  margin-top: $spacing-xs;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  line-height: $line-height-loose;
+}
+
+.notice {
+  padding: $spacing-md;
+  border-radius: $radius-md;
+  background: $color-bg-card;
+}
+
+.noticeText {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  line-height: $line-height-loose;
+}

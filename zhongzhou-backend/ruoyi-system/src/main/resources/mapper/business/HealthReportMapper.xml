@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.HealthReportMapper">
+
+	<resultMap type="HealthReport" id="HealthReportResult">
+		<id     property="reportId"      column="report_id"      />
+		<result property="elderId"       column="elder_id"       />
+		<result property="elderName"     column="elder_name"     />
+		<result property="reportType"    column="report_type"    />
+		<result property="reportTitle"   column="report_title"   />
+		<result property="periodStart"   column="period_start"   />
+		<result property="periodEnd"     column="period_end"     />
+		<result property="score"         column="score"          />
+		<result property="riskLevel"     column="risk_level"     />
+		<result property="summary"       column="summary"        />
+		<result property="content"       column="content"        />
+		<result property="modelSource"   column="model_source"   />
+		<result property="modelName"     column="model_name"     />
+		<result property="status"        column="status"         />
+		<result property="errorMsg"      column="error_msg"      />
+		<result property="archivedUrl"   column="archived_url"   />
+		<result property="tenantId"      column="tenant_id"      />
+		<result property="delFlag"       column="del_flag"       />
+		<result property="createBy"      column="create_by"      />
+		<result property="createTime"    column="create_time"    />
+		<result property="updateBy"      column="update_by"      />
+		<result property="updateTime"    column="update_time"    />
+		<result property="remark"        column="remark"         />
+	</resultMap>
+
+	<resultMap type="Checkin" id="CheckinBriefResult">
+		<id     property="checkinId"         column="checkin_id"          />
+		<result property="applyNo"           column="apply_no"            />
+		<result property="elderName"         column="elder_name"          />
+		<result property="idCard"            column="id_card"             />
+		<result property="careLevel"         column="care_level"          />
+		<result property="suggestCareLevel"  column="suggest_care_level"  />
+		<result property="selfCare"          column="self_care"           />
+		<result property="mentalState"       column="mental_state"        />
+		<result property="disease"           column="disease"             />
+		<result property="assessmentResult"  column="assessment_result"   />
+		<result property="assessor"          column="assessor"            />
+		<result property="assessTime"        column="assess_time"         />
+		<result property="roomId"            column="room_id"             />
+		<result property="bedId"             column="bed_id"              />
+		<result property="nurseIds"          column="nurse_ids"           />
+		<result property="contractNo"        column="contract_no"         />
+		<result property="contractStart"     column="contract_start"      />
+		<result property="contractEnd"       column="contract_end"        />
+		<result property="checkinDate"       column="checkin_date"        />
+		<result property="applyStatus"       column="apply_status"        />
+		<result property="tenantId"          column="tenant_id"           />
+	</resultMap>
+
+	<resultMap type="BedLocation" id="BedLocationResult">
+		<result property="floorNo"  column="floor_no" />
+		<result property="roomNo"   column="room_no"  />
+		<result property="bedNo"    column="bed_no"   />
+	</resultMap>
+
+	<sql id="selectHealthReportVo">
+		select report_id, elder_id, elder_name, report_type, report_title, period_start, period_end,
+		       score, risk_level, summary, content, model_source, model_name, status, error_msg,
+		       archived_url, tenant_id, del_flag, create_by, create_time, update_by, update_time, remark
+		from biz_health_report
+	</sql>
+
+	<select id="selectHealthReportList" parameterType="HealthReport" resultMap="HealthReportResult">
+		select report_id, elder_id, elder_name, report_type, report_title, period_start, period_end,
+		       score, risk_level, summary, model_source, model_name, status, error_msg,
+		       archived_url, tenant_id, del_flag, create_by, create_time, update_by, update_time, remark
+		from biz_health_report
+		where del_flag = '0'
+		<if test="elderId != null">
+			and elder_id = #{elderId}
+		</if>
+		<if test="elderName != null and elderName != ''">
+			and elder_name like concat('%', #{elderName}, '%')
+		</if>
+		<if test="reportType != null and reportType != ''">
+			and report_type = #{reportType}
+		</if>
+		<if test="riskLevel != null and riskLevel != ''">
+			and risk_level = #{riskLevel}
+		</if>
+		<if test="status != null and status != ''">
+			and status = #{status}
+		</if>
+		order by report_id desc
+	</select>
+
+	<select id="selectHealthReportById" parameterType="Long" resultMap="HealthReportResult">
+		<include refid="selectHealthReportVo"/>
+		where report_id = #{reportId} and del_flag = '0'
+	</select>
+
+	<select id="selectBedLocationByElderId" resultMap="BedLocationResult">
+		select r.floor_no, r.room_no, b.bed_no
+		from biz_bed b
+		left join biz_room r on r.room_id = b.room_id
+		where b.elder_id = #{elderId} and b.del_flag = '0'
+		order by b.bed_id desc
+		limit 1
+	</select>
+
+	<select id="selectLatestCheckin" resultMap="CheckinBriefResult">
+		select checkin_id, apply_no, elder_name, id_card, care_level, suggest_care_level,
+		       self_care, mental_state, disease, assessment_result, assessor, assess_time,
+		       room_id, bed_id, nurse_ids, contract_no, contract_start, contract_end,
+		       checkin_date, apply_status, tenant_id
+		from biz_checkin
+		where del_flag = '0'
+		<choose>
+			<when test="idCard != null and idCard != ''">
+				and id_card = #{idCard}
+			</when>
+			<otherwise>
+				and elder_name = #{elderName}
+			</otherwise>
+		</choose>
+		order by checkin_id desc
+		limit 1
+	</select>
+
+	<select id="countServiceOrders" resultType="int">
+		select count(1) from biz_service_order
+		where elder_id = #{elderId} and del_flag = '0'
+		<if test="start != null">and service_time &gt;= #{start}</if>
+		<if test="end != null">and service_time &lt;= #{end}</if>
+	</select>
+
+	<select id="countCompletedServiceOrders" resultType="int">
+		select count(1) from biz_service_order
+		where elder_id = #{elderId} and status = '2' and del_flag = '0'
+		<if test="start != null">and service_time &gt;= #{start}</if>
+		<if test="end != null">and service_time &lt;= #{end}</if>
+	</select>
+
+	<select id="sumServiceAmount" resultType="java.math.BigDecimal">
+		select coalesce(sum(amount), 0) from biz_service_order
+		where elder_id = #{elderId} and del_flag = '0'
+		<if test="start != null">and service_time &gt;= #{start}</if>
+		<if test="end != null">and service_time &lt;= #{end}</if>
+	</select>
+
+	<select id="countVisits" resultType="int">
+		select count(1) from biz_visit
+		where elder_id = #{elderId} and del_flag = '0'
+		<if test="start != null">and visit_date &gt;= #{start}</if>
+		<if test="end != null">and visit_date &lt;= #{end}</if>
+	</select>
+
+	<select id="countUnpaidBills" resultType="int">
+		select count(1) from biz_bill
+		where elder_id = #{elderId} and pay_status = '0' and del_flag = '0'
+	</select>
+
+	<select id="sumUnpaidBills" resultType="java.math.BigDecimal">
+		select coalesce(sum(amount), 0) from biz_bill
+		where elder_id = #{elderId} and pay_status = '0' and del_flag = '0'
+	</select>
+
+	<select id="sumPaidBills" resultType="java.math.BigDecimal">
+		select coalesce(sum(paid_amount), 0) from biz_bill
+		where elder_id = #{elderId} and pay_status = '1' and del_flag = '0'
+	</select>
+
+	<insert id="insertHealthReport" parameterType="HealthReport" useGeneratedKeys="true" keyProperty="reportId">
+		insert into biz_health_report(
+			elder_id, elder_name, report_type, report_title, period_start, period_end,
+			score, risk_level, summary, content, model_source, model_name, status, error_msg,
+			tenant_id, del_flag, create_by, create_time, remark
+		)values(
+			#{elderId}, #{elderName}, #{reportType}, #{reportTitle}, #{periodStart}, #{periodEnd},
+			#{score}, #{riskLevel}, #{summary}, #{content}, #{modelSource}, #{modelName}, #{status}, #{errorMsg},
+			#{tenantId}, '0', #{createBy}, sysdate(), #{remark}
+		)
+	</insert>
+
+	<update id="updateHealthReportArchive">
+		update biz_health_report
+		set archived_url = #{archivedUrl}, update_by = #{updateBy}, update_time = sysdate()
+		where report_id = #{reportId}
+	</update>
+
+	<update id="deleteHealthReportByIds">
+		update biz_health_report set del_flag = '2', update_time = sysdate()
+		where report_id in
+		<foreach collection="array" item="reportId" open="(" separator="," close=")">
+			#{reportId}
+		</foreach>
+	</update>
+
+</mapper>

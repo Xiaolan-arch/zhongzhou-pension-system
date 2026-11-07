@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.DepositMapper">
+
+	<resultMap type="Deposit" id="DepositResult">
+		<id     property="depositId"    column="deposit_id"    />
+		<result property="tenantId"     column="tenant_id"     />
+		<result property="elderId"      column="elder_id"      />
+		<result property="elderName"    column="elder_name"    />
+		<result property="depositType"  column="deposit_type"  />
+		<result property="amount"       column="amount"        />
+		<result property="payMethod"    column="pay_method"    />
+		<result property="operatorId"   column="operator_id"   />
+		<result property="operatorName" column="operator_name" />
+		<result property="createBy"     column="create_by"     />
+		<result property="createTime"   column="create_time"   />
+		<result property="remark"       column="remark"        />
+	</resultMap>
+
+	<sql id="selectDepositVo">
+		select deposit_id, tenant_id, elder_id, elder_name, deposit_type, amount, pay_method,
+			   operator_id, operator_name, create_by, create_time, remark
+		from biz_deposit
+	</sql>
+
+	<select id="selectDepositList" parameterType="Deposit" resultMap="DepositResult">
+		<include refid="selectDepositVo"/>
+		where del_flag = '0'
+		<if test="elderName != null and elderName != ''">
+			and elder_name like concat('%', #{elderName}, '%')
+		</if>
+		<if test="depositType != null and depositType != ''">
+			and deposit_type = #{depositType}
+		</if>
+		order by deposit_id desc
+	</select>
+
+	<insert id="insertDeposit" parameterType="Deposit" useGeneratedKeys="true" keyProperty="depositId">
+		insert into biz_deposit(
+			tenant_id, elder_id, elder_name, deposit_type, amount, pay_method,
+			operator_id, operator_name, del_flag, create_by, create_time, remark
+		)values(
+			#{tenantId}, #{elderId}, #{elderName}, #{depositType}, #{amount}, #{payMethod},
+			#{operatorId}, #{operatorName}, '0', #{createBy}, sysdate(), #{remark}
+		)
+	</insert>
+
+	<!-- 押金余额：收押金为正、退押金为负；租户条件由拦截器自动追加 -->
+	<select id="selectElderDepositBalance" resultType="java.math.BigDecimal">
+		select ifnull(sum(case when deposit_type = '1' then amount else -amount end), 0)
+		from biz_deposit
+		where elder_id = #{elderId} and del_flag = '0'
+	</select>
+
+</mapper>

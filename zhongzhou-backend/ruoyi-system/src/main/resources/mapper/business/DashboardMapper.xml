@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.DashboardMapper">
+
+	<!-- ==================== 核心指标 ==================== -->
+
+	<select id="countAllElders" resultType="java.lang.Long">
+		select count(*) from biz_elder where del_flag = '0'
+	</select>
+
+	<select id="countInResidenceElders" resultType="java.lang.Long">
+		select count(*) from biz_elder where del_flag = '0' and status = '0'
+	</select>
+
+	<select id="countPendingElders" resultType="java.lang.Long">
+		select count(*) from biz_elder where del_flag = '0' and status = '2'
+	</select>
+
+	<select id="countBeds" resultType="java.lang.Long">
+		select count(*) from biz_bed where del_flag = '0'
+	</select>
+
+	<select id="countOccupiedBeds" resultType="java.lang.Long">
+		select count(*) from biz_bed where del_flag = '0' and status = '1'
+	</select>
+
+	<select id="countRooms" resultType="java.lang.Long">
+		select count(*) from biz_room where del_flag = '0'
+	</select>
+
+	<select id="sumMonthReceivable" resultType="java.math.BigDecimal">
+		select ifnull(sum(amount), 0) from biz_bill
+		where del_flag = '0' and bill_month = date_format(now(), '%Y-%m')
+	</select>
+
+	<select id="sumMonthReceived" resultType="java.math.BigDecimal">
+		select ifnull(sum(paid_amount), 0) from biz_bill
+		where del_flag = '0' and bill_month = date_format(now(), '%Y-%m')
+	</select>
+
+	<select id="sumUnpaidAmount" resultType="java.math.BigDecimal">
+		select ifnull(sum(amount - paid_amount), 0) from biz_bill
+		where del_flag = '0' and pay_status = '0'
+	</select>
+
+	<select id="countUnpaidBills" resultType="java.lang.Long">
+		select count(*) from biz_bill where del_flag = '0' and pay_status = '0'
+	</select>
+
+	<!-- 逾期账单数：超过 period_end 30 天未付清（含 0 待支付 + 3 部分已收） -->
+	<select id="countOverdueBills" resultType="java.lang.Long">
+		select count(*) from biz_bill
+		where del_flag = '0' and pay_status != '1'
+		  and period_end <![CDATA[ < ]]> date_sub(curdate(), interval 30 day)
+	</select>
+
+	<!-- 逾期金额合计 -->
+	<select id="sumOverdueAmount" resultType="java.math.BigDecimal">
+		select ifnull(sum(amount - paid_amount), 0) from biz_bill
+		where del_flag = '0' and pay_status != '1'
+		  and period_end <![CDATA[ < ]]> date_sub(curdate(), interval 30 day)
+	</select>
+
+	<select id="countTodayPendingVisits" resultType="java.lang.Long">
+		select count(*) from biz_visit
+		where del_flag = '0' and visit_date = curdate() and status = '0'
+	</select>
+
+	<select id="countTodayVisits" resultType="java.lang.Long">
+		select count(*) from biz_visit
+		where del_flag = '0' and visit_date = curdate() and status in ('0', '1', '2')
+	</select>
+
+	<select id="countPendingServiceOrders" resultType="java.lang.Long">
+		select count(*) from biz_service_order where del_flag = '0' and status = '0'
+	</select>
+
+	<select id="countUnfinishedServiceOrders" resultType="java.lang.Long">
+		select count(*) from biz_service_order where del_flag = '0' and status in ('0', '1')
+	</select>
+
+	<select id="countHighRiskReports" resultType="java.lang.Long">
+		select count(*) from biz_health_report
+		where del_flag = '0' and status = '1' and risk_level = '2'
+	</select>
+
+	<!-- ==================== 趋势 ==================== -->
+
+	<select id="selectIncomeTrend" resultType="java.util.Map">
+		select date_format(pay_time, '%Y-%m') as month,
+		       ifnull(sum(paid_amount), 0) as income,
+		       count(*) as billCount
+		from biz_bill
+		where del_flag = '0' and pay_status = '1' and pay_time is not null
+		  and date_format(pay_time, '%Y-%m') &gt;= #{startMonth}
+		group by date_format(pay_time, '%Y-%m')
+	</select>
+
+	<select id="selectCheckinTrend" resultType="java.util.Map">
+		select date_format(checkin_date, '%Y-%m') as month,
+		       count(*) as checkin
+		from biz_elder
+		where del_flag = '0' and checkin_date is not null
+		  and date_format(checkin_date, '%Y-%m') &gt;= #{startMonth}
+		group by date_format(checkin_date, '%Y-%m')
+		order by month
+	</select>
+
+	<select id="selectCheckoutTrend" resultType="java.util.Map">
+		select date_format(checkout_date, '%Y-%m') as month,
+		       count(*) as checkout
+		from biz_checkout
+		where del_flag = '0' and apply_status = '7' and checkout_date is not null
+		  and date_format(checkout_date, '%Y-%m') &gt;= #{startMonth}
+		group by date_format(checkout_date, '%Y-%m')
+		order by month
+	</select>
+
+	<select id="selectServiceTrend" resultType="java.util.Map">
+		select date_format(service_time, '%Y-%m') as month,
+		       count(*) as serviceDone
+		from biz_service_order
+		where del_flag = '0' and status = '2' and service_time is not null
+		  and date_format(service_time, '%Y-%m') &gt;= #{startMonth}
+		group by date_format(service_time, '%Y-%m')
+		order by month
+	</select>
+
+	<!-- ==================== 分布 ==================== -->
+
+	<select id="selectCareLevelDistribution" resultType="java.util.Map">
+		select ifnull(care_level, '') as careLevel,
+		       count(*) as value
+		from biz_elder
+		where del_flag = '0' and status = '0'
+		group by care_level
+	</select>
+
+	<select id="selectFloorOccupancy" resultType="java.util.Map">
+		select r.floor_no as floorNo,
+		       count(b.bed_id) as total,
+		       ifnull(sum(case when b.status = '1' then 1 else 0 end), 0) as occupied
+		from biz_bed b
+		inner join biz_room r on b.room_id = r.room_id and r.del_flag = '0'
+		where b.del_flag = '0'
+		group by r.floor_no
+		order by r.floor_no
+	</select>
+
+	<select id="selectBillTypeDistribution" resultType="java.util.Map">
+		select bill_type as billType,
+		       count(*) as value,
+		       ifnull(sum(amount), 0) as amount
+		from biz_bill
+		where del_flag = '0'
+		group by bill_type
+	</select>
+
+	<select id="selectServiceItemDistribution" resultType="java.util.Map">
+		select item_name as name,
+		       count(*) as value,
+		       ifnull(sum(amount), 0) as amount
+		from biz_service_order
+		where del_flag = '0' and status = '2'
+		group by item_name
+		order by count(*) desc
+		limit 5
+	</select>
+
+	<select id="selectTenantOverview" resultType="java.util.Map">
+		select t.tenant_id as tenantId,
+		       t.tenant_name as tenantName,
+		       count(e.elder_id) as elderCount
+		from sys_tenant t
+		left join biz_elder e on e.tenant_id = t.tenant_id and e.del_flag = '0' and e.status = '0'
+		where t.del_flag = '0'
+		group by t.tenant_id, t.tenant_name
+		order by t.tenant_id
+	</select>
+
+	<!-- ==================== 待办 ==================== -->
+
+	<select id="selectPendingVisits" resultType="java.util.Map">
+		select visit_id as visitId,
+		       visit_type as visitType,
+		       visitor_name as visitorName,
+		       visitor_phone as visitorPhone,
+		       elder_name as elderName,
+		       elder_id as elderId,
+		       date_format(visit_date, '%Y-%m-%d') as visitDate,
+		       visit_time as visitTime,
+		       people_count as peopleCount,
+		       status as status
+		from biz_visit
+		where del_flag = '0' and status in ('0', '1') and visit_date &gt;= curdate()
+		order by visit_date, visit_time
+		limit #{limit}
+	</select>
+
+	<select id="selectUnfinishedOrders" resultType="java.util.Map">
+		select order_id as orderId,
+		       order_no as orderNo,
+		       elder_id as elderId,
+		       elder_name as elderName,
+		       item_name as itemName,
+		       nurse_name as nurseName,
+		       date_format(service_time, '%Y-%m-%d %H:%i') as serviceTime,
+		       status as status
+		from biz_service_order
+		where del_flag = '0' and status in ('0', '1')
+		order by service_time
+		limit #{limit}
+	</select>
+
+	<select id="selectUnpaidBills" resultType="java.util.Map">
+		select bill_id as billId,
+		       bill_no as billNo,
+		       elder_id as elderId,
+		       elder_name as elderName,
+		       bill_month as billMonth,
+		       bill_type as billType,
+		       amount as amount,
+		       paid_amount as paidAmount,
+		       (amount - paid_amount) as unpaidAmount,
+		       pay_status as payStatus
+		from biz_bill
+		where del_flag = '0' and pay_status = '0'
+		order by bill_month, amount desc
+		limit #{limit}
+	</select>
+
+	<select id="selectKeyElders" resultType="java.util.Map">
+		select elder_id as elderId,
+		       elder_name as elderName,
+		       age as age,
+		       care_level as careLevel,
+		       gender as gender,
+		       date_format(checkin_date, '%Y-%m-%d') as checkinDate,
+		       phone as phone
+		from biz_elder
+		where del_flag = '0' and status = '0' and care_level in ('3', '4')
+		order by care_level desc, elder_id
+		limit #{limit}
+	</select>
+
+</mapper>

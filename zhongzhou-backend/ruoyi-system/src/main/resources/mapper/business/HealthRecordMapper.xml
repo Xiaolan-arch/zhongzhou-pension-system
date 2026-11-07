@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.HealthRecordMapper">
+
+	<resultMap type="HealthRecord" id="HealthRecordResult">
+		<id     property="recordId"          column="record_id"          />
+		<result property="elderId"           column="elder_id"           />
+		<result property="elderName"         column="elder_name"         />
+		<result property="recordDate"        column="record_date"        />
+		<result property="recordTime"        column="record_time"        />
+		<result property="bloodPressureHigh" column="blood_pressure_high" />
+		<result property="bloodPressureLow"  column="blood_pressure_low"  />
+		<result property="heartRate"         column="heart_rate"         />
+		<result property="bodyTemp"          column="body_temp"          />
+		<result property="bloodSugar"        column="blood_sugar"        />
+		<result property="bloodOxygen"       column="blood_oxygen"       />
+		<result property="weight"            column="weight"             />
+		<result property="steps"             column="steps"              />
+		<result property="sleepHours"        column="sleep_hours"        />
+		<result property="isAbnormal"        column="is_abnormal"        />
+		<result property="abnormalItems"     column="abnormal_items"     />
+		<result property="remark"            column="remark"             />
+		<result property="tenantId"          column="tenant_id"          />
+		<result property="delFlag"           column="del_flag"           />
+		<result property="createBy"          column="create_by"          />
+		<result property="createTime"        column="create_time"        />
+		<result property="updateBy"          column="update_by"          />
+		<result property="updateTime"        column="update_time"        />
+	</resultMap>
+
+	<sql id="selectHealthRecordVo">
+		select r.record_id, r.elder_id, e.elder_name,
+		       r.record_date, r.record_time,
+		       r.blood_pressure_high, r.blood_pressure_low,
+		       r.heart_rate, r.body_temp, r.blood_sugar, r.blood_oxygen,
+		       r.weight, r.steps, r.sleep_hours,
+		       r.is_abnormal, r.abnormal_items, r.remark,
+		       r.tenant_id, r.del_flag, r.create_by, r.create_time,
+		       r.update_by, r.update_time
+		from biz_health_record r
+		left join biz_elder e on r.elder_id = e.elder_id and e.del_flag = '0'
+	</sql>
+
+	<!-- 异常判定：血压(收缩压90-140, 舒张压60-90) / 心率60-100 / 体温36-37.3 / 血糖<=7.0 / 血氧>=95 -->
+	<sql id="isAbnormalExpr">
+		case when
+			#{bloodPressureHigh} is not null and (#{bloodPressureHigh} <![CDATA[ < ]]> 90 or #{bloodPressureHigh} <![CDATA[ > ]]> 140) or
+			#{bloodPressureLow}  is not null and (#{bloodPressureLow}  <![CDATA[ < ]]> 60 or #{bloodPressureLow}  <![CDATA[ > ]]> 90)  or
+			#{heartRate}         is not null and (#{heartRate}         <![CDATA[ < ]]> 60 or #{heartRate}         <![CDATA[ > ]]> 100) or
+			#{bodyTemp}          is not null and (#{bodyTemp}          <![CDATA[ < ]]> 36.0 or #{bodyTemp}          <![CDATA[ > ]]> 37.3) or
+			#{bloodSugar}        is not null and #{bloodSugar}        <![CDATA[ > ]]> 7.0 or
+			#{bloodOxygen}       is not null and #{bloodOxygen}       <![CDATA[ < ]]> 95.0
+		then '1' else '0' end
+	</sql>
+
+	<sql id="abnormalItemsExpr">
+		concat_ws(',',
+			case when #{bloodPressureHigh} is not null and #{bloodPressureHigh} <![CDATA[ > ]]> 140 then '收缩压偏高' end,
+			case when #{bloodPressureHigh} is not null and #{bloodPressureHigh} <![CDATA[ < ]]> 90  then '收缩压偏低' end,
+			case when #{bloodPressureLow}  is not null and #{bloodPressureLow}  <![CDATA[ > ]]> 90  then '舒张压偏高' end,
+			case when #{bloodPressureLow}  is not null and #{bloodPressureLow}  <![CDATA[ < ]]> 60  then '舒张压偏低' end,
+			case when #{heartRate}         is not null and #{heartRate}         <![CDATA[ < ]]> 60  then '心率偏低'   end,
+			case when #{heartRate}         is not null and #{heartRate}         <![CDATA[ > ]]> 100 then '心率偏高'   end,
+			case when #{bodyTemp}          is not null and #{bodyTemp}          <![CDATA[ < ]]> 36.0 then '体温偏低' end,
+			case when #{bodyTemp}          is not null and #{bodyTemp}          <![CDATA[ > ]]> 37.3 then '体温偏高' end,
+			case when #{bloodSugar}        is not null and #{bloodSugar}        <![CDATA[ > ]]> 7.0  then '血糖偏高'   end,
+			case when #{bloodOxygen}       is not null and #{bloodOxygen}       <![CDATA[ < ]]> 95.0 then '血氧偏低'   end
+		)
+	</sql>
+
+	<select id="selectHealthRecordList" parameterType="HealthRecord" resultMap="HealthRecordResult">
+		<include refid="selectHealthRecordVo"/>
+		<where>
+			r.del_flag = '0'
+			<if test="elderId != null"> and r.elder_id = #{elderId}</if>
+			<if test="isAbnormal != null and isAbnormal != ''"> and r.is_abnormal = #{isAbnormal}</if>
+			<if test="params.beginTime != null and params.beginTime != ''"> and r.record_date &gt;= #{params.beginTime}</if>
+			<if test="params.endTime != null and params.endTime != ''"> and r.record_date &lt;= #{params.endTime}</if>
+		</where>
+		order by r.record_date desc, r.record_time desc, r.record_id desc
+	</select>
+
+	<select id="selectHealthRecordById" parameterType="Long" resultMap="HealthRecordResult">
+		<include refid="selectHealthRecordVo"/>
+		where r.record_id = #{recordId} and r.del_flag = '0'
+	</select>
+
+	<select id="selectRecentByElderId" resultMap="HealthRecordResult">
+		<include refid="selectHealthRecordVo"/>
+		where r.elder_id = #{elderId} and r.del_flag = '0'
+		order by r.record_date desc, r.record_id desc
+		limit #{limit}
+	</select>
+
+	<insert id="insertHealthRecord" parameterType="HealthRecord" useGeneratedKeys="true" keyProperty="recordId">
+		insert into biz_health_record (elder_id, record_date, record_time,
+			blood_pressure_high, blood_pressure_low, heart_rate, body_temp,
+			blood_sugar, blood_oxygen, weight, steps, sleep_hours,
+			is_abnormal, abnormal_items, remark,
+			tenant_id, create_by, create_time)
+		values (#{elderId}, #{recordDate}, #{recordTime},
+			#{bloodPressureHigh}, #{bloodPressureLow}, #{heartRate}, #{bodyTemp},
+			#{bloodSugar}, #{bloodOxygen}, #{weight}, #{steps}, #{sleepHours},
+			<include refid="isAbnormalExpr"/>,
+			<include refid="abnormalItemsExpr"/>,
+			#{remark}, #{tenantId}, #{createBy}, sysdate())
+	</insert>
+
+	<update id="updateHealthRecord" parameterType="HealthRecord">
+		update biz_health_record
+		<set>
+			<if test="recordDate != null">record_date = #{recordDate},</if>
+			<if test="recordTime != null">record_time = #{recordTime},</if>
+			<if test="bloodPressureHigh != null">blood_pressure_high = #{bloodPressureHigh},</if>
+			<if test="bloodPressureLow != null">blood_pressure_low = #{bloodPressureLow},</if>
+			<if test="heartRate != null">heart_rate = #{heartRate},</if>
+			<if test="bodyTemp != null">body_temp = #{bodyTemp},</if>
+			<if test="bloodSugar != null">blood_sugar = #{bloodSugar},</if>
+			<if test="bloodOxygen != null">blood_oxygen = #{bloodOxygen},</if>
+			<if test="weight != null">weight = #{weight},</if>
+			<if test="steps != null">steps = #{steps},</if>
+			<if test="sleepHours != null">sleep_hours = #{sleepHours},</if>
+			<if test="remark != null">remark = #{remark},</if>
+			is_abnormal = <include refid="isAbnormalExpr"/>,
+			abnormal_items = <include refid="abnormalItemsExpr"/>,
+			update_by = #{updateBy}, update_time = sysdate()
+		</set>
+		where record_id = #{recordId}
+	</update>
+
+	<update id="deleteHealthRecordByIds">
+		update biz_health_record set del_flag = '2', update_time = sysdate()
+		where record_id in
+		<foreach collection="array" item="recordId" open="(" separator="," close=")">
+			#{recordId}
+		</foreach>
+	</update>
+
+	<update id="deleteHealthRecordById" parameterType="Long">
+		update biz_health_record set del_flag = '2', update_time = sysdate() where record_id = #{recordId}
+	</update>
+
+	<select id="countAbnormalHealth" resultType="java.lang.Long">
+		select count(distinct elder_id) from biz_health_record
+		where del_flag = '0' and is_abnormal = '1'
+		  and record_date = curdate()
+	</select>
+
+</mapper>

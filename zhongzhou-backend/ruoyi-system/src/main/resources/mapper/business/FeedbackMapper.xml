@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.FeedbackMapper">
+
+	<resultMap type="Feedback" id="FeedbackResult">
+		<id     property="feedbackId"   column="feedback_id"   />
+		<result property="elderId"      column="elder_id"      />
+		<result property="elderName"    column="elder_name"    />
+		<result property="tenantId"     column="tenant_id"     />
+		<result property="familyPhone"  column="family_phone"  />
+		<result property="familyName"   column="family_name"   />
+		<result property="feedbackType" column="feedback_type" />
+		<result property="content"      column="content"       />
+		<result property="status"       column="status"        />
+		<result property="reply"        column="reply"         />
+		<result property="replyBy"      column="reply_by"      />
+		<result property="replyTime"    column="reply_time"    />
+		<result property="delFlag"      column="del_flag"      />
+		<result property="createBy"     column="create_by"     />
+		<result property="createTime"   column="create_time"   />
+		<result property="updateBy"     column="update_by"     />
+		<result property="updateTime"   column="update_time"   />
+	</resultMap>
+
+	<sql id="selectFeedbackVo">
+		select feedback_id, elder_id, elder_name, tenant_id, family_phone, family_name, feedback_type,
+		       content, status, reply, reply_by, reply_time,
+		       del_flag, create_by, create_time, update_by, update_time
+		from biz_feedback
+	</sql>
+
+	<select id="selectFeedbackList" parameterType="Feedback" resultMap="FeedbackResult">
+		<include refid="selectFeedbackVo"/>
+		<where>
+			del_flag = '0'
+			<if test="tenantId != null">
+				AND tenant_id = #{tenantId}
+			</if>
+			<if test="elderId != null">
+				AND elder_id = #{elderId}
+			</if>
+			<if test="familyPhone != null and familyPhone != ''">
+				AND family_phone = #{familyPhone}
+			</if>
+			<if test="feedbackType != null and feedbackType != ''">
+				AND feedback_type = #{feedbackType}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+		order by feedback_id desc
+	</select>
+
+	<select id="selectFeedbackById" parameterType="Long" resultMap="FeedbackResult">
+		<include refid="selectFeedbackVo"/>
+		where feedback_id = #{feedbackId} and del_flag = '0'
+	</select>
+
+	<insert id="insertFeedback" parameterType="Feedback" useGeneratedKeys="true" keyProperty="feedbackId">
+		insert into biz_feedback(
+			<if test="elderId != null">elder_id,</if>
+			<if test="elderName != null">elder_name,</if>
+			tenant_id,
+			<if test="familyPhone != null">family_phone,</if>
+			<if test="familyName != null">family_name,</if>
+			<if test="feedbackType != null">feedback_type,</if>
+			content,
+			<if test="status != null">status,</if>
+			del_flag,
+			<if test="createBy != null">create_by,</if>
+			create_time
+		)values(
+			<if test="elderId != null">#{elderId},</if>
+			<if test="elderName != null">#{elderName},</if>
+			#{tenantId},
+			<if test="familyPhone != null">#{familyPhone},</if>
+			<if test="familyName != null">#{familyName},</if>
+			<if test="feedbackType != null">#{feedbackType},</if>
+			#{content},
+			<if test="status != null">#{status},</if>
+			'0',
+			<if test="createBy != null">#{createBy},</if>
+			sysdate()
+		)
+	</insert>
+
+	<update id="updateFeedback" parameterType="Feedback">
+		update biz_feedback
+		<set>
+			<if test="status != null">status = #{status},</if>
+			<if test="reply != null">reply = #{reply},</if>
+			<if test="updateBy != null">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		</set>
+		where feedback_id = #{feedbackId}
+	</update>
+
+	<update id="deleteFeedbackByIds" parameterType="Long">
+		update biz_feedback set del_flag = '2' where feedback_id in
+		<foreach collection="array" item="feedbackId" open="(" separator="," close=")">
+			#{feedbackId}
+		</foreach>
+	</update>
+
+	<update id="replyFeedback">
+		update biz_feedback
+		set status = '2',
+			reply = #{reply},
+			reply_by = #{replyBy},
+			reply_time = sysdate(),
+			update_by = #{replyBy},
+			update_time = sysdate()
+		where feedback_id = #{feedbackId} and del_flag = '0'
+	</update>
+
+</mapper>

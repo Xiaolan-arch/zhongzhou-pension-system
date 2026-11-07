@@ -1,0 +1,305 @@
+@use '@/styles/variables.scss' as *;
+
+.pageRoot {
+  min-height: 100vh;
+  padding: 0 $page-padding calc(#{$spacing-xl} + env(safe-area-inset-bottom));
+  background: $color-bg-page;
+}
+
+.header {
+  padding: $spacing-lg 0 $spacing-md;
+}
+
+.title {
+  display: block;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+}
+
+.subtitle {
+  display: block;
+  margin-top: 6rpx;
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.formCard {
+  padding: $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+}
+
+.formTitle {
+  display: block;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  margin-bottom: $spacing-sm;
+}
+
+.elderPicker {
+  padding-bottom: $spacing-xs;
+}
+
+.field {
+  margin-top: $spacing-md;
+}
+
+.label {
+  display: block;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-xs;
+}
+
+.fixedValue {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.placeholder {
+  font-size: $font-size-sm;
+  color: $color-text-disabled;
+}
+
+.pickerBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 88rpx;
+  padding: 0 $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.pickerValue {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
+.pickerArrow {
+  font-size: $font-size-lg;
+  color: $color-text-disabled;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+}
+
+.stepButton {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: $radius-round;
+  background: $color-primary-soft;
+  @include flex-center;
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.stepDisabled {
+  background: $color-bg-hover;
+  .stepText {
+    color: $color-text-disabled;
+  }
+}
+
+.stepText {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-primary-dark;
+  line-height: 1;
+}
+
+.stepValue {
+  min-width: 72rpx;
+  text-align: center;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+}
+
+.stepTip {
+  margin-left: $spacing-md;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.textarea {
+  width: 100%;
+  height: 140rpx;
+  padding: $spacing-sm $spacing-md;
+  box-sizing: border-box;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  line-height: $line-height-normal;
+}
+
+.submit {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  margin-top: $spacing-lg;
+  border-radius: $radius-button;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  color: $color-text-white;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
+
+.formTip {
+  display: block;
+  margin-top: $spacing-sm;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  text-align: center;
+  line-height: $line-height-normal;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: $spacing-lg 0 $spacing-md;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+}
+
+.sectionTip {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.loading {
+  padding: 60rpx 0;
+  text-align: center;
+}
+
+.loadingText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.record {
+  padding: $spacing-md $spacing-lg;
+  margin-bottom: $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+}
+
+.recordTop {
+  display: flex;
+  align-items: center;
+}
+
+.dateBox {
+  width: 148rpx;
+  padding: $spacing-sm 0;
+  border-radius: $radius-md;
+  background: $color-primary-soft;
+  @include flex-center;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.dateText {
+  font-size: $font-size-xs;
+  color: $color-primary-dark;
+}
+
+.timeText {
+  margin-top: 4rpx;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-primary-dark;
+}
+
+.recordInfo {
+  flex: 1;
+  margin: 0 $spacing-sm 0 $spacing-md;
+  min-width: 0;
+}
+
+.recordElder {
+  display: block;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  @include text-ellipsis;
+}
+
+.recordMeta {
+  display: block;
+  margin-top: 4rpx;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.recordRemark {
+  display: block;
+  margin-top: $spacing-sm;
+  padding-top: $spacing-sm;
+  border-top: 2rpx solid $color-divider;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  line-height: $line-height-normal;
+}
+
+.codeBox {
+  margin-top: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  background: $color-primary-soft;
+  border-radius: $radius-md;
+  text-align: center;
+}
+
+.codeLabel {
+  display: block;
+  font-size: $font-size-xs;
+  color: $color-primary-dark;
+}
+
+.codeValue {
+  display: block;
+  margin-top: 4rpx;
+  font-size: 44rpx;
+  font-weight: $font-weight-bold;
+  letter-spacing: 6rpx;
+  color: $color-primary-dark;
+}
+
+.codeTip {
+  display: block;
+  margin-top: 2rpx;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.recordBottom {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: $spacing-sm;
+}
+
+.cancel {
+  padding: 8rpx 24rpx;
+  border-radius: $radius-button;
+  border: 2rpx solid $color-border;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  &:active {
+    opacity: 0.7;
+  }
+}

@@ -1,0 +1,22 @@
+.page { min-height: 100vh; background: #f4f7f5; padding: 24rpx; }
+
+.card { background: #fff; border-radius: 16rpx; padding: 28rpx; }
+.cardTitle { font-size: 28rpx; font-weight: 600; color: #1f4a3d; margin-bottom: 20rpx; }
+
+.canvasWrap {
+  width: 100%; height: 480rpx;
+  border: 2rpx dashed #e3ebe4; border-radius: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+.canvas { width: 100%; height: 100%; }
+
+.table { margin-top: 20rpx; }
+.tableHeader, .tableRow {
+  display: flex; font-size: 24rpx;
+  padding: 12rpx 0; border-bottom: 2rpx solid #f0f4f1;
+}
+.th { flex: 1; color: #5b6e5f; font-weight: 600; }
+.td { flex: 1; color: #1f4a3d; text-align: center; }
+
+.empty { text-align: center; padding: 120rpx 0; font-size: 28rpx; color: #8a94a6; }

@@ -1,0 +1,114 @@
+.page {
+  min-height: 100vh;
+  background: #f4f7f5;
+  padding: 24rpx;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+}
+
+.cardTitle {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1f4a3d;
+  margin-bottom: 20rpx;
+}
+
+.infoRow {
+  display: flex;
+  margin-bottom: 12rpx;
+  font-size: 26rpx;
+}
+.infoKey { color: #8a94a6; width: 180rpx; flex-shrink: 0; }
+.infoVal { color: #1f4a3d; flex: 1; }
+
+/* 步骤条 */
+.steps {
+  display: flex;
+  justify-content: space-between;
+  padding: 10rpx 0;
+  position: relative;
+}
+.stepItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.stepDot {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: #dfe7e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22rpx;
+  color: #fff;
+  font-weight: 600;
+  z-index: 1;
+}
+.stepDone .stepDot { background: #2fa36b; }
+.stepCurrent .stepDot { background: #b07a0a; }
+.stepLabel {
+  font-size: 20rpx;
+  color: #8a94a6;
+  margin-top: 10rpx;
+  max-width: 100rpx;
+  text-align: center;
+}
+.stepDone .stepLabel, .stepCurrent .stepLabel { color: #1f4a3d; }
+.stepLine {
+  position: absolute;
+  top: 20rpx;
+  left: calc(50% + 20rpx);
+  right: calc(-50% + 20rpx);
+  height: 4rpx;
+  background: #dfe7e0;
+}
+.stepDoneLine { background: #2fa36b; }
+
+.feedbackBox {
+  background: #fbe6e3;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-top: 16rpx;
+}
+.feedbackTitle { font-size: 24rpx; color: #b8443a; font-weight: 600; }
+.feedbackText { font-size: 24rpx; color: #3a1b16; margin-top: 8rpx; }
+
+.tipBox {
+  background: #fff7e6;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-top: 16rpx;
+}
+.tipText { font-size: 24rpx; color: #9a6a12; }
+
+.linkText { color: #2fa36b; font-size: 26rpx; text-decoration: underline; }
+
+.actionBar {
+  padding: 8rpx 0 60rpx;
+}
+
+.primaryBtn {
+  background: linear-gradient(135deg, #3fb97c 0%, #2fa36b 100%);
+  border-radius: 44rpx;
+  padding: 24rpx 0;
+  text-align: center;
+  box-shadow: 0 8rpx 20rpx rgba(47, 163, 107, 0.24);
+}
+.primaryBtnDisabled { opacity: 0.6; }
+.primaryBtnText { color: #fff; font-size: 30rpx; font-weight: 600; }
+.actionTip {
+  display: block;
+  margin-top: 16rpx;
+  font-size: 22rpx;
+  color: #8a94a6;
+  text-align: center;
+}

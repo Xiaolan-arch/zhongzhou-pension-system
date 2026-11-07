@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.PaymentRecordMapper">
+
+	<resultMap type="PaymentRecord" id="PaymentRecordResult">
+		<id     property="recordId"     column="record_id"     />
+		<result property="recordNo"     column="record_no"     />
+		<result property="billId"       column="bill_id"       />
+		<result property="billNo"       column="bill_no"       />
+		<result property="elderId"      column="elder_id"      />
+		<result property="elderName"    column="elder_name"    />
+		<result property="payAmount"    column="pay_amount"    />
+		<result property="payMethod"    column="pay_method"    />
+		<result property="payVoucher"   column="pay_voucher"   />
+		<result property="remark"       column="remark"        />
+		<result property="operatorId"   column="operator_id"   />
+		<result property="operatorName" column="operator_name" />
+		<result property="tenantId"     column="tenant_id"     />
+		<result property="createBy"     column="create_by"     />
+		<result property="createTime"   column="create_time"   />
+	</resultMap>
+
+	<sql id="selectRecordVo">
+		select record_id, record_no, bill_id, bill_no, elder_id, elder_name,
+		       pay_amount, pay_method, pay_voucher, remark,
+		       operator_id, operator_name, tenant_id, create_by, create_time
+		from biz_payment_record
+	</sql>
+
+	<select id="selectPaymentRecordById" parameterType="Long" resultMap="PaymentRecordResult">
+		<include refid="selectRecordVo"/>
+		where record_id = #{recordId} and del_flag = '0'
+	</select>
+
+	<select id="selectPaymentRecordsByBillId" parameterType="Long" resultMap="PaymentRecordResult">
+		<include refid="selectRecordVo"/>
+		where bill_id = #{billId} and del_flag = '0'
+		order by create_time desc, record_id desc
+	</select>
+
+	<select id="selectPaymentRecordsByBillIdAndTenant" resultMap="PaymentRecordResult">
+		<include refid="selectRecordVo"/>
+		where bill_id = #{billId} and tenant_id = #{tenantId} and del_flag = '0'
+		order by create_time desc, record_id desc
+	</select>
+
+	<select id="selectPaymentRecordsByElderId" parameterType="Long" resultMap="PaymentRecordResult">
+		<include refid="selectRecordVo"/>
+		where elder_id = #{elderId} and del_flag = '0'
+		order by create_time desc, record_id desc
+	</select>
+
+	<insert id="insertPaymentRecord" parameterType="PaymentRecord" useGeneratedKeys="true" keyProperty="recordId">
+		insert into biz_payment_record(
+			record_no, bill_id, bill_no, elder_id, elder_name,
+			pay_amount, pay_method, pay_voucher, remark,
+			operator_id, operator_name, tenant_id, del_flag, create_by, create_time
+		)values(
+			#{recordNo}, #{billId}, #{billNo}, #{elderId}, #{elderName},
+			#{payAmount}, #{payMethod}, #{payVoucher}, #{remark},
+			#{operatorId}, #{operatorName}, #{tenantId}, '0', #{createBy}, sysdate()
+		)
+	</insert>
+
+</mapper>

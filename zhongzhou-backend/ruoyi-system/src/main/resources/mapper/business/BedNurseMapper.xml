@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.BedNurseMapper">
+
+	<resultMap type="BedNurse" id="BedNurseResult">
+		<id     property="id"         column="id"         />
+		<result property="bedId"      column="bed_id"     />
+		<result property="nurseId"    column="nurse_id"   />
+		<result property="tenantId"   column="tenant_id"  />
+		<result property="createTime" column="create_time"/>
+		<result property="nurseName"  column="nurse_name" />
+	</resultMap>
+
+	<insert id="insertBedNurse" parameterType="BedNurse" useGeneratedKeys="true" keyProperty="id">
+		insert into biz_bed_nurse(bed_id, nurse_id, tenant_id, create_time)
+		values(#{bedId}, #{nurseId}, #{tenantId}, sysdate())
+	</insert>
+
+	<delete id="deleteBedNurseByBedId">
+		delete from biz_bed_nurse where bed_id = #{bedId}
+	</delete>
+
+	<delete id="deleteBedNurseByBedIds">
+		delete from biz_bed_nurse where bed_id in
+		<foreach collection="bedIds" item="bedId" open="(" separator="," close=")">
+			#{bedId}
+		</foreach>
+	</delete>
+
+	<select id="selectBedNurseListByBedIds" resultMap="BedNurseResult">
+		select bn.id, bn.bed_id, bn.nurse_id, bn.tenant_id, bn.create_time, n.nurse_name
+		from biz_bed_nurse bn
+		inner join biz_nurse n on n.nurse_id = bn.nurse_id
+		where n.del_flag = '0' and bn.bed_id in
+		<foreach collection="bedIds" item="bedId" open="(" separator="," close=")">
+			#{bedId}
+		</foreach>
+		order by bn.bed_id, bn.nurse_id
+	</select>
+
+</mapper>

@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>中州颐养 · 家属端小程序原型</title>
+<style>
+  :root {
+    --green: #2fa36b;
+    --green-light: #5bc08d;
+    --green-dark: #217a4f;
+    --green-soft: #e8f6ee;
+    --page: #f4f7f5;
+    --card: #ffffff;
+    --text: #1d2129;
+    --text-2: #4e5969;
+    --text-3: #8a94a6;
+    --line: #edf1ee;
+    --red: #f05a5a;
+    --red-soft: #fdecec;
+    --orange: #f2a65a;
+    --orange-soft: #fdf3e7;
+    --shadow: 0 4px 18px rgba(17, 44, 32, 0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+    background: radial-gradient(circle at 20% 0%, #eaf5ee 0%, #f6f9f7 38%, #eef2ef 100%);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  .page-wrap {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 28px 24px 60px;
+  }
+  .topbar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-mark {
+    width: 46px; height: 46px; border-radius: 14px;
+    background: linear-gradient(135deg, var(--green), var(--green-light));
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 20px;
+    box-shadow: 0 6px 16px rgba(47, 163, 107, 0.28);
+  }
+  .brand h1 { font-size: 22px; letter-spacing: 0.5px; }
+  .brand p { font-size: 13px; color: var(--text-3); margin-top: 2px; }
+  .top-badges { display: flex; gap: 10px; flex-wrap: wrap; }
+  .badge {
+    font-size: 12px; padding: 7px 14px; border-radius: 999px;
+    background: rgba(255,255,255,0.8); border: 1px solid #dce8e1; color: var(--green-dark);
+  }
+  .badge.plain { background: #fff; color: var(--text-2); border-color: var(--line); }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 232px minmax(420px, 1fr) 340px;
+    gap: 28px;
+    align-items: start;
+  }
+  .side, .notes {
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid #e2ebe5;
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: var(--shadow);
+    position: sticky; top: 24px;
+  }
+  .side-title, .notes-title {
+    font-size: 12px; letter-spacing: 2px; color: var(--text-3);
+    text-transform: uppercase; margin: 4px 6px 10px;
+  }
+  .nav-group { margin-bottom: 16px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 12px; cursor: pointer;
+    font-size: 14px; color: var(--text-2); transition: all .18s ease;
+  }
+  .nav-item:hover { background: var(--green-soft); color: var(--green-dark); }
+  .nav-item.active { background: var(--green); color: #fff; box-shadow: 0 6px 14px rgba(47, 163, 107, 0.24); }
+  .nav-item .dot { width: 7px; height: 7px; border-radius: 50%; background: #c3d6ca; flex: none; }
+  .nav-item.active .dot { background: #fff; }
+  .nav-item .tag { margin-left: auto; font-size: 10px; padding: 2px 7px; border-radius: 999px; background: #eef2ef; color: var(--text-3); }
+  .nav-item.active .tag { background: rgba(255,255,255,0.22); color: #fff; }
+
+  .phone-stage { display: flex; justify-content: center; }
+  .phone {
+    width: 390px; height: 844px;
+    background: #14211b;
+    border-radius: 46px;
+    padding: 10px;
+    box-shadow: 0 24px 60px rgba(17, 44, 32, 0.26), inset 0 0 0 2px rgba(255,255,255,0.06);
+    position: relative;
+  }
+  .phone::before {
+    content: ""; position: absolute; left: 50%; top: 16px; transform: translateX(-50%);
+    width: 112px; height: 26px; background: #0b1410; border-radius: 999px; z-index: 20;
+  }
+  .screen {
+    width: 100%; height: 100%; background: var(--page);
+    border-radius: 38px; overflow: hidden; position: relative;
+    display: flex; flex-direction: column;
+  }
+  .statusbar {
+    height: 42px; flex: none; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 22px; font-size: 12px; color: #fff; position: relative; z-index: 10;
+  }
+  .statusbar.dark { color: var(--text); }
+  .statusbar .right { display: flex; gap: 6px; align-items: center; }
+  .sig { display: flex; gap: 2px; align-items: flex-end; }
+  .sig i { display: block; width: 3px; background: currentColor; border-radius: 1px; }
+  .sig i:nth-child(1){height:4px;} .sig i:nth-child(2){height:6px;} .sig i:nth-child(3){height:8px;} .sig i:nth-child(4){height:10px;}
+  .battery { width: 22px; height: 10px; border: 1px solid currentColor; border-radius: 3px; position: relative; }
+  .battery::after { content: ""; position: absolute; right: -4px; top: 2px; width: 2px; height: 4px; background: currentColor; border-radius: 1px; }
+  .battery::before { content: ""; position: absolute; left: 1px; top: 1px; bottom: 1px; width: 12px; background: currentColor; border-radius: 2px; }
+
+  .viewport {
+    flex: 1; overflow-y: auto; overflow-x: hidden;
+    scrollbar-width: none;
+  }
+  .viewport::-webkit-scrollbar { display: none; }
+
+  .tabbar {
+    flex: none; height: 62px; display: flex; align-items: center;
+    background: rgba(255,255,255,0.96); border-top: 1px solid var(--line);
+    padding-bottom: 6px; backdrop-filter: blur(10px);
+  }
+  .tab {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+    font-size: 10px; color: #9aa6a0; cursor: pointer; user-select: none;
+  }
+  .tab .icon {
+    width: 26px; height: 26px; border-radius: 9px; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; background: #f0f4f1; color: #8b9a91;
+  }
+  .tab.active { color: var(--green-dark); font-weight: 600; }
+  .tab.active .icon { background: var(--green-soft); color: var(--green-dark); }
+
+  .hero { padding: 8px 22px 74px; color: #fff; background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%); }
+  .hero-row { display: flex; align-items: center; justify-content: space-between; }
+  .hello { font-size: 24px; font-weight: 700; letter-spacing: 0.3px; }
+  .hello-sub { margin-top: 4px; font-size: 13px; color: rgba(255,255,255,0.88); }
+  .hero-chip {
+    font-size: 11px; padding: 5px 10px; border-radius: 999px;
+    background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.28); color: #fff;
+  }
+  .hero-note { margin-top: 18px; font-size: 11px; color: rgba(255,255,255,0.8); }
+
+  .body { padding: 0 16px 20px; }
+  .pull-up { margin-top: -58px; }
+  .card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); padding: 16px; margin-bottom: 12px; }
+  .card-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .card-title { font-size: 15px; font-weight: 600; }
+  .card-link { font-size: 12px; color: var(--green-dark); cursor: pointer; }
+
+  .elder-main { display: flex; gap: 12px; align-items: center; }
+  .avatar {
+    width: 54px; height: 54px; border-radius: 16px; flex: none;
+    background: linear-gradient(135deg, #d8f0e2, #b9e3cc);
+    color: var(--green-dark); font-size: 22px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .elder-name { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .mini-tag { font-size: 10px; padding: 3px 8px; border-radius: 6px; background: var(--green-soft); color: var(--green-dark); font-weight: 500; }
+  .elder-meta { margin-top: 6px; font-size: 12px; color: var(--text-3); }
+  .elder-meta b { color: var(--text-2); font-weight: 500; }
+  .nurse-row { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-size: 12px; color: var(--text-3); }
+  .nurse-row b { color: var(--text-2); font-weight: 500; }
+
+  .alert {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--orange-soft); border: 1px solid #f7dfc3; border-radius: 14px;
+    padding: 12px 14px; margin-bottom: 12px;
+  }
+  .alert-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); flex: none; }
+  .alert-text { font-size: 12px; color: #8a5a24; line-height: 1.5; flex: 1; }
+  .alert-btn { font-size: 11px; color: #fff; background: var(--orange); padding: 6px 10px; border-radius: 8px; cursor: pointer; white-space: nowrap; }
+
+  .stats { display: flex; background: var(--card); border-radius: 16px; box-shadow: var(--shadow); padding: 16px 8px; margin-bottom: 12px; }
+  .stat { flex: 1; text-align: center; position: relative; }
+  .stat + .stat::before { content: ""; position: absolute; left: 0; top: 8px; bottom: 8px; width: 1px; background: var(--line); }
+  .stat-val { font-size: 18px; font-weight: 700; color: var(--green-dark); }
+  .stat-label { margin-top: 5px; font-size: 11px; color: var(--text-3); }
+
+  .section-head { display: flex; align-items: center; justify-content: space-between; margin: 16px 2px 10px; }
+  .section-title { font-size: 15px; font-weight: 600; }
+  .section-tip { font-size: 11px; color: var(--text-3); }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .entry { background: var(--card); border-radius: 14px; box-shadow: var(--shadow); padding: 14px; display: flex; gap: 10px; align-items: center; cursor: pointer; }
+  .entry-icon { width: 38px; height: 38px; border-radius: 11px; background: var(--green-soft); color: var(--green-dark); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex: none; }
+  .entry-title { font-size: 13px; font-weight: 600; }
+  .entry-desc { margin-top: 3px; font-size: 10px; color: var(--text-3); }
+
+  .notice-card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); padding: 14px 16px; margin-top: 4px; }
+  .notice-item { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 12px; color: var(--text-2); }
+  .notice-item:last-child { border-bottom: none; }
+  .notice-time { margin-left: auto; color: var(--text-3); font-size: 10px; white-space: nowrap; }
+  .notice-mark { width: 6px; height: 6px; border-radius: 50%; background: var(--green); margin-top: 5px; flex: none; }
+
+  .sub-header { display: flex; align-items: center; gap: 10px; padding: 6px 16px 12px; background: var(--card); border-bottom: 1px solid var(--line); position: relative; z-index: 5; }
+  .back { width: 30px; height: 30px; border-radius: 50%; background: #f0f4f1; display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--text-2); cursor: pointer; }
+  .sub-title { font-size: 15px; font-weight: 600; }
+  .sub-tip { margin-left: auto; font-size: 10px; color: var(--text-3); }
+
+  .chips { display: flex; gap: 8px; padding: 10px 16px 12px; overflow-x: auto; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip { font-size: 12px; padding: 7px 13px; border-radius: 999px; background: #fff; border: 1px solid #e2ebe5; color: var(--text-2); white-space: nowrap; cursor: pointer; }
+  .chip.active { background: var(--green); border-color: var(--green); color: #fff; }
+
+  .list-card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); padding: 14px 16px; margin-bottom: 10px; }
+  .list-top { display: flex; align-items: center; justify-content: space-between; }
+  .list-name { font-size: 14px; font-weight: 600; }
+  .status { font-size: 10px; padding: 3px 8px; border-radius: 6px; }
+  .status.ok { background: var(--green-soft); color: var(--green-dark); }
+  .status.warn { background: var(--orange-soft); color: #a86a22; }
+  .status.danger { background: var(--red-soft); color: var(--red); }
+  .status.info { background: #eef1f5; color: #697686; }
+  .row { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--text-3); margin-top: 8px; }
+  .row b { color: var(--text-2); font-weight: 500; }
+  .feedback { margin-top: 10px; padding: 10px 12px; background: #f7faf8; border-radius: 10px; font-size: 11px; color: var(--text-2); line-height: 1.6; }
+  .feedback span { color: var(--green-dark); font-weight: 500; }
+
+  .bill-summary { background: linear-gradient(135deg, var(--green), var(--green-light)); border-radius: 18px; padding: 18px; color: #fff; box-shadow: 0 10px 24px rgba(47,163,107,0.22); margin-bottom: 12px; }
+  .bill-summary .label { font-size: 12px; color: rgba(255,255,255,0.86); }
+  .bill-summary .money { font-size: 30px; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px; }
+  .bill-summary .split { display: flex; justify-content: space-between; margin-top: 10px; font-size: 11px; color: rgba(255,255,255,0.86); }
+  .bill-summary .penalty { margin-top: 8px; display: inline-block; font-size: 10px; padding: 4px 9px; border-radius: 6px; background: rgba(255,255,255,0.18); color: #ffe1b8; }
+
+  .bill-card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); padding: 14px 16px; margin-bottom: 10px; }
+  .bill-card .top { display: flex; align-items: flex-start; justify-content: space-between; }
+  .bill-month { font-size: 15px; font-weight: 700; }
+  .bill-type { margin-top: 3px; font-size: 10px; color: var(--text-3); }
+  .bill-amount { text-align: right; font-size: 20px; font-weight: 700; }
+  .bill-amount small { display: block; font-size: 10px; font-weight: 400; color: var(--text-3); margin-top: 2px; }
+  .bill-tags { display: flex; gap: 6px; }
+  .bill-meta { display: flex; justify-content: space-between; margin-top: 10px; font-size: 11px; color: var(--text-3); }
+  .penalty-row { margin-top: 8px; padding: 8px 10px; border-radius: 8px; background: var(--orange-soft); display: flex; justify-content: space-between; font-size: 11px; color: #9a6323; }
+
+  .quick-row { display: flex; gap: 10px; margin-top: 2px; }
+  .quick-box { flex: 1; background: var(--card); border-radius: 14px; box-shadow: var(--shadow); padding: 14px; cursor: pointer; }
+  .quick-box .q-label { font-size: 11px; color: var(--text-3); }
+  .quick-box .q-value { margin-top: 5px; font-size: 17px; font-weight: 700; color: var(--green-dark); }
+  .quick-box .q-desc { margin-top: 3px; font-size: 10px; color: var(--text-3); }
+
+  .profile { display: flex; gap: 12px; align-items: center; padding: 18px; background: linear-gradient(135deg, var(--green), var(--green-light)); color: #fff; }
+  .profile .avatar { background: rgba(255,255,255,0.24); color: #fff; }
+  .profile-name { font-size: 19px; font-weight: 700; }
+  .profile-sub { margin-top: 4px; font-size: 12px; color: rgba(255,255,255,0.86); }
+
+  .menu-card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; margin-bottom: 12px; }
+  .menu-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--line); cursor: pointer; }
+  .menu-item:last-child { border-bottom: none; }
+  .menu-icon { width: 32px; height: 32px; border-radius: 9px; background: var(--green-soft); color: var(--green-dark); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+  .menu-title { font-size: 14px; font-weight: 500; }
+  .menu-desc { margin-top: 2px; font-size: 10px; color: var(--text-3); }
+  .arrow { margin-left: auto; color: #b8c2bc; font-size: 14px; }
+  .menu-group-title { font-size: 11px; color: var(--text-3); margin: 14px 4px 8px; }
+
+  .balance-card { background: linear-gradient(135deg, var(--green), var(--green-light)); border-radius: 18px; color: #fff; padding: 20px; box-shadow: 0 10px 24px rgba(47,163,107,0.22); margin-bottom: 12px; }
+  .balance-label { font-size: 12px; color: rgba(255,255,255,0.86); }
+  .balance-value { font-size: 32px; font-weight: 700; margin-top: 4px; }
+  .balance-note { margin-top: 10px; font-size: 11px; color: rgba(255,255,255,0.8); }
+
+  .timeline { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); padding: 16px; }
+  .tl-item { display: flex; gap: 12px; padding-bottom: 16px; position: relative; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-line { width: 12px; display: flex; flex-direction: column; align-items: center; flex: none; }
+  .tl-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--green); flex: none; }
+  .tl-dot.gray { background: #d5dfd9; }
+  .tl-stem { width: 1px; flex: 1; background: #e7ede9; margin-top: 5px; }
+  .tl-item:last-child .tl-stem { display: none; }
+  .tl-content { flex: 1; }
+  .tl-title { font-size: 13px; font-weight: 600; display: flex; gap: 8px; align-items: center; }
+  .tl-desc { margin-top: 4px; font-size: 11px; color: var(--text-3); line-height: 1.6; }
+  .tl-amount { font-size: 14px; font-weight: 700; color: var(--green-dark); white-space: nowrap; }
+  .tl-item.in .tl-amount { color: var(--green-dark); }
+  .tl-item.out .tl-amount { color: var(--red); }
+
+  .msg-item { background: var(--card); border-radius: 14px; box-shadow: var(--shadow); padding: 14px; margin-bottom: 10px; cursor: pointer; }
+  .msg-top { display: flex; align-items: center; gap: 8px; }
+  .msg-type { font-size: 10px; padding: 3px 7px; border-radius: 5px; background: var(--green-soft); color: var(--green-dark); }
+  .msg-type.warn { background: var(--orange-soft); color: #a86a22; }
+  .msg-time { margin-left: auto; font-size: 10px; color: var(--text-3); }
+  .msg-title { margin-top: 8px; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+  .unread { width: 6px; height: 6px; border-radius: 50%; background: var(--red); }
+  .msg-text { margin-top: 5px; font-size: 11px; color: var(--text-3); line-height: 1.6; }
+
+  .invoice-card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); padding: 18px; margin-bottom: 12px; }
+  .invoice-head { text-align: center; padding-bottom: 14px; border-bottom: 1px dashed #dbe6df; }
+  .invoice-title { font-size: 17px; font-weight: 700; letter-spacing: 2px; }
+  .invoice-sub { margin-top: 4px; font-size: 10px; color: var(--text-3); }
+  .invoice-row { display: flex; justify-content: space-between; padding: 9px 0; font-size: 12px; color: var(--text-3); border-bottom: 1px solid var(--line); }
+  .invoice-row b { color: var(--text-2); font-weight: 500; }
+  .invoice-total { display: flex; justify-content: space-between; margin-top: 12px; font-size: 15px; font-weight: 700; }
+  .invoice-total span { color: var(--green-dark); }
+
+  .score-card { background: linear-gradient(135deg, var(--green), var(--green-light)); border-radius: 18px; color: #fff; padding: 20px; margin-bottom: 12px; box-shadow: 0 10px 24px rgba(47,163,107,0.22); }
+  .score-val { font-size: 42px; font-weight: 700; line-height: 1; }
+  .score-desc { margin-top: 8px; font-size: 12px; color: rgba(255,255,255,0.88); }
+  .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+  .metric { background: var(--card); border-radius: 14px; box-shadow: var(--shadow); padding: 14px 10px; text-align: center; }
+  .metric-label { font-size: 10px; color: var(--text-3); }
+  .metric-value { margin-top: 6px; font-size: 17px; font-weight: 700; color: var(--text); }
+  .metric-unit { font-size: 9px; color: var(--text-3); margin-left: 2px; }
+  .bars { display: flex; align-items: flex-end; gap: 5px; height: 54px; margin-top: 12px; }
+  .bars i { flex: 1; border-radius: 3px 3px 0 0; background: linear-gradient(180deg, var(--green-light), var(--green)); opacity: .9; }
+
+  .evaluate-card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); padding: 16px; }
+  .evaluate-card textarea { width: 100%; height: 74px; resize: none; border: 1px solid #e2ebe5; border-radius: 10px; padding: 10px; font-size: 12px; font-family: inherit; color: var(--text-2); outline: none; margin-top: 10px; background: #fbfdfc; }
+  .rate-row { display: flex; gap: 8px; margin-top: 10px; }
+  .rate { flex: 1; text-align: center; font-size: 12px; padding: 9px 0; border-radius: 9px; border: 1px solid #e2ebe5; color: var(--text-2); cursor: pointer; }
+  .rate.active { border-color: var(--green); background: var(--green-soft); color: var(--green-dark); font-weight: 600; }
+  .primary-btn { width: 100%; margin-top: 14px; padding: 13px; border: none; border-radius: 999px; background: var(--green); color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .ghost-btn { width: 100%; margin-top: 10px; padding: 12px; border: 1px solid #dbe6df; border-radius: 999px; background: #fff; color: var(--text-2); font-size: 13px; cursor: pointer; font-family: inherit; }
+
+  .notes .note-block { padding: 12px 6px; border-bottom: 1px solid var(--line); }
+  .notes .note-block:last-child { border-bottom: none; }
+  .note-label { font-size: 10px; letter-spacing: 1px; color: var(--text-3); margin-bottom: 6px; }
+  .note-value { font-size: 12px; color: var(--text-2); line-height: 1.7; }
+  .note-value code { font-size: 10px; background: #f1f5f2; padding: 2px 5px; border-radius: 4px; color: var(--green-dark); word-break: break-all; }
+  .note-status { display: inline-block; margin-top: 6px; font-size: 10px; padding: 3px 8px; border-radius: 6px; }
+  .note-status.have { background: var(--green-soft); color: var(--green-dark); }
+  .note-status.new { background: var(--orange-soft); color: #a86a22; }
+  .note-status.hide { background: #eef1f5; color: #697686; }
+
+  .legend { display: flex; gap: 12px; margin-top: 8px; font-size: 10px; color: var(--text-3); flex-wrap: wrap; }
+  .legend span { display: inline-flex; align-items: center; gap: 4px; }
+  .dot-have { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+  .dot-new { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); }
+
+  @media (max-width: 1180px) {
+    .layout { grid-template-columns: 200px minmax(390px, 1fr); }
+    .notes { display: none; }
+  }
+  @media (max-width: 880px) {
+    .layout { grid-template-columns: 1fr; }
+    .side { position: static; display: flex; flex-wrap: wrap; gap: 6px; }
+    .side-title, .nav-group { width: 100%; }
+    .phone-stage { margin-top: 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-mark">中</div>
+      <div>
+        <h1>中州颐养 · 家属端小程序原型</h1>
+        <p>全量后端能力在家属端的呈现设计 · 原型示意（非最终视觉）</p>
+      </div>
+    </div>
+    <div class="top-badges">
+      <div class="badge">绿色：已在现有功能中</div>
+      <div class="badge plain">橙色：本次建议新增</div>
+      <div class="badge plain">后台管理类：不在家属端展示</div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="side">
+      <div class="side-title">一级页面</div>
+      <div class="nav-group" id="nav-main"></div>
+      <div class="side-title">二级页面</div>
+      <div class="nav-group" id="nav-sub"></div>
+      <div class="legend">
+        <span><i class="dot-have"></i>已有能力</span>
+        <span><i class="dot-new"></i>建议新增</span>
+      </div>
+    </aside>
+
+    <div class="phone-stage">
+      <div class="phone">
+        <div class="screen" id="screen"></div>
+      </div>
+    </div>
+
+    <aside class="notes" id="notes"></aside>
+  </div>
+</div>
+
+<script>
+const SCREENS = [
+  { id: 'home', group: 'main', nav: '首页', badge: '已有', title: '首页',
+    html: homeHtml(),
+    notes: {
+      goal: '家属打开小程序 3 秒内看到老人当前状态、待办提醒和常用入口。',
+      ability: '老人档案摘要、房间床位、责任护理员、健康评分、待缴账单、今日提醒。',
+      api: '/family/elders · /family/bills · /family/reports · /business/deposit（新增聚合）',
+      status: 'have'
+    }
+  },
+  { id: 'service', group: 'main', nav: '服务', badge: '部分新增', title: '服务',
+    html: serviceHtml(),
+    notes: {
+      goal: '让家属看得见“今天做了什么、谁做的、做得怎么样”，并可申请服务。',
+      ability: '服务记录、护理任务执行反馈、护理员、服务项目目录、服务申请。',
+      api: '/family/services · /family/services/{id}/feedback（新增）· /family/service-items（新增）',
+      status: 'mix'
+    }
+  },
+  { id: 'bill', group: 'main', nav: '费用', badge: '已有+新增', title: '费用',
+    html: billHtml(),
+    notes: {
+      goal: '账单、滞纳金、收款记录、押金、电子票据统一在“费用”下闭环。',
+      ability: '账单明细、部分收款、逾期滞纳金、在线缴费、押金余额、电子票据。',
+      api: '/family/bills · /family/bills/{id} · /family/bills/{id}/pay · /family/deposits（新增）',
+      status: 'mix'
+    }
+  },
+  { id: 'mine', group: 'main', nav: '我的', badge: '部分新增', title: '我的',
+    html: mineHtml(),
+    notes: {
+      goal: '家属个人信息与老人档案入口，承载低频但重要的页面。',
+      ability: '家属身份、绑定老人、老人档案、健康趋势、入住/退住进度、消息、反馈。',
+      api: '/family/profile · /family/elders · /family/checkins（新增）· /family/messages（新增）',
+      status: 'mix'
+    }
+  },
+  { id: 'deposit', group: 'sub', nav: '押金余额与流水', badge: '新增', title: '押金',
+    html: depositHtml(),
+    notes: {
+      goal: '家属可随时核对押金余额与收退记录，减少电话询问。',
+      ability: '押金余额、收押金/退押金流水、操作时间与方式。',
+      api: '/family/deposits?elderId= · /family/deposits/balance/{elderId}',
+      status: 'new'
+    }
+  },
+  { id: 'message', group: 'sub', nav: '消息中心', badge: '新增', title: '消息中心',
+    html: messageHtml(),
+    notes: {
+      goal: '把账单到期、逾期、探访确认等通知沉淀下来，避免只依赖微信推送。',
+      ability: '消息列表、分类筛选、已读/未读、跳转对应账单或探访。',
+      api: '/family/messages · /family/messages/{id}/read（新增）',
+      status: 'new'
+    }
+  },
+  { id: 'invoice', group: 'sub', nav: '电子票据', badge: '新增', title: '电子票据',
+    html: invoiceHtml(),
+    notes: {
+      goal: '家属可预览、保存账单对应的电子收据/发票。',
+      ability: '票据信息、费用明细、预览、保存到相册或转发。',
+      api: '/family/bills/{billId}/invoice · /invoice/pdf（复用 Web 发票能力）',
+      status: 'new'
+    }
+  },
+  { id: 'health', group: 'sub', nav: '健康趋势', badge: '新增', title: '健康趋势',
+    html: healthHtml(),
+    notes: {
+      goal: '把护理记录里的体征数据变成家属看得懂的趋势，而不是原始记录表。',
+      ability: '健康评分、血压/血糖/体温近 7 次记录、异常提醒。',
+      api: '/family/health-records?elderId= · /family/health-records/recent（新增）',
+      status: 'new'
+    }
+  },
+  { id: 'checkin', group: 'sub', nav: '入住 / 退住进度', badge: '新增', title: '入住进度',
+    html: checkinHtml(),
+    notes: {
+      goal: '家属端只读查看流程进度，审批与操作仍留在 Web 后台。',
+      ability: '入住 7 步进度、退住结算进度、当前节点与待办材料。',
+      api: '/family/checkins/{elderId} · /family/checkouts/{elderId}（新增只读）',
+      status: 'new'
+    }
+  },
+  { id: 'evaluate', group: 'sub', nav: '服务反馈与评价', badge: '新增', title: '服务反馈',
+    html: evaluateHtml(),
+    notes: {
+      goal: '家属对已完成服务做轻量评价，机构侧汇总服务质量。',
+      ability: '服务详情、护理员、执行反馈、满意度评价、文字反馈。',
+      api: '/family/services/{id} · /family/services/{id}/evaluate（新增）',
+      status: 'new'
+    }
+  }
+];
+
+function homeHtml() {
+  return `
+  <div class="statusbar"><span>9:41</span><span class="right"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="battery"></span></span></div>
+  <div class="viewport">
+    <div class="hero">
+      <div class="hero-row">
+        <div>
+          <div class="hello">您好，张敏</div>
+          <div class="hello-sub">我是老人的女儿 · 中州颐养家属关爱平台</div>
+        </div>
+        <div class="hero-chip">中州养老院</div>
+      </div>
+      <div class="hero-note">2026 年 11 月 4 日 · 数据实时同步</div>
+    </div>
+    <div class="body pull-up">
+      <div class="card">
+        <div class="card-title-row">
+          <div class="card-title">当前照护老人</div>
+          <div class="card-link" data-goto="mine">切换 ›</div>
+        </div>
+        <div class="elder-main">
+          <div class="avatar">张</div>
+          <div style="flex:1">
+            <div class="elder-name">张伟 <span class="mini-tag">半自理</span><span class="mini-tag">在住</span></div>
+            <div class="elder-meta">男 · 78 岁 · 入住 <b>2026-03-01</b></div>
+            <div class="elder-meta"><b>3F · 101 房 · 1011 床</b></div>
+          </div>
+        </div>
+        <div class="nurse-row"><span>责任护理员</span><b>李秀兰 · 白班</b></div>
+      </div>
+
+      <div class="alert">
+        <span class="alert-dot"></span>
+        <div class="alert-text">2026-12 账单待缴 <b>¥3,099.00</b>，押金余额 ¥9,000.00</div>
+        <div class="alert-btn" data-goto="bill">去查看</div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="stat-val">6</div><div class="stat-label">本月已完成服务</div></div>
+        <div class="stat"><div class="stat-val">¥3,099</div><div class="stat-label">待缴费用</div></div>
+        <div class="stat"><div class="stat-val">78</div><div class="stat-label">最新健康评分</div></div>
+      </div>
+
+      <div class="section-head"><span class="section-title">常用服务</span><span class="section-tip">关爱每一天</span></div>
+      <div class="grid2">
+        <div class="entry" data-goto="health"><div class="entry-icon">报</div><div><div class="entry-title">健康报告</div><div class="entry-desc">AI 照护评估</div></div></div>
+        <div class="entry" data-goto="checkin"><div class="entry-icon">访</div><div><div class="entry-title">探访预约</div><div class="entry-desc">预约与进度</div></div></div>
+        <div class="entry" data-goto="service"><div class="entry-icon">护</div><div><div class="entry-title">服务记录</div><div class="entry-desc">护理与反馈</div></div></div>
+        <div class="entry" data-goto="bill"><div class="entry-icon">账</div><div><div class="entry-title">费用账单</div><div class="entry-desc">缴费与票据</div></div></div>
+      </div>
+
+      <div class="section-head"><span class="section-title">今日提醒</span><span class="section-tip" data-goto="message">全部 ›</span></div>
+      <div class="notice-card">
+        <div class="notice-item"><span class="notice-mark"></span>2026-12 账单已生成，请及时缴费<span class="notice-time">10:20</span></div>
+        <div class="notice-item"><span class="notice-mark"></span>11-08 探访预约已确认，请按时到院<span class="notice-time">昨天</span></div>
+        <div class="notice-item"><span class="notice-mark"></span>新的月度健康报告已生成<span class="notice-time">11-01</span></div>
+      </div>
+    </div>
+  </div>
+  ${tabbar('home')}`;
+}
+
+function serviceHtml() {
+  return `
+  <div class="statusbar"><span>9:41</span><span class="right"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="battery"></span></span></div>
+  <div class="viewport">
+    <div style="padding:14px 16px 0;background:#fff;border-bottom:1px solid #edf1ee">
+      <div style="font-size:20px;font-weight:700">护理服务</div>
+      <div style="font-size:11px;color:#8a94a6;margin-top:4px">每一次服务，都有记录可查</div>
+    </div>
+    <div class="chips"><span class="chip active">全部</span><span class="chip">待执行</span><span class="chip">已完成</span><span class="chip">已取消</span></div>
+    <div class="body" style="padding-top:2px">
+      <div class="list-card">
+        <div class="list-top"><span class="list-name">助浴服务</span><span class="status ok">已完成</span></div>
+        <div class="row"><span>服务时间</span><b>2026-11-03 09:30</b></div>
+        <div class="row"><span>护理员</span><b>李秀兰</b></div>
+        <div class="feedback"><span>执行反馈：</span>老人配合良好，皮肤无异常，已协助更换衣物。</div>
+        <div style="margin-top:8px;font-size:11px;color:#217a4f;cursor:pointer" data-goto="evaluate">查看详情并评价 ›</div>
+      </div>
+      <div class="list-card">
+        <div class="list-top"><span class="list-name">血压监测</span><span class="status ok">已完成</span></div>
+        <div class="row"><span>服务时间</span><b>2026-11-03 08:10</b></div>
+        <div class="row"><span>护理员</span><b>王丽</b></div>
+        <div class="feedback"><span>执行反馈：</span>血压 138/86 mmHg，状态平稳，已记录至健康档案。</div>
+        <div style="margin-top:8px;font-size:11px;color:#217a4f;cursor:pointer" data-goto="health">查看健康趋势 ›</div>
+      </div>
+      <div class="section-head"><span class="section-title">服务项目</span><span class="section-tip">可申请</span></div>
+      <div class="list-card">
+        <div class="list-top"><span class="list-name">康复训练</span><span class="status info">¥80 / 次</span></div>
+        <div class="row"><span>服务内容</span><b>肢体功能训练 · 约 40 分钟</b></div>
+        <div style="margin-top:10px;text-align:right"><span style="font-size:11px;color:#fff;background:#2fa36b;padding:6px 12px;border-radius:8px">申请服务</span></div>
+      </div>
+      <div class="list-card">
+        <div class="list-top"><span class="list-name">陪同就医</span><span class="status info">¥120 / 次</span></div>
+        <div class="row"><span>服务内容</span><b>院内陪诊 · 需提前 1 天预约</b></div>
+      </div>
+    </div>
+  </div>
+  ${tabbar('service')}`;
+}
+
+function billHtml() {
+  return `
+  <div class="statusbar"><span>9:41</span><span class="right"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="battery"></span></span></div>
+  <div class="viewport">
+    <div style="padding:14px 16px 8px;background:#fff;border-bottom:1px solid #edf1ee">
+      <div style="font-size:20px;font-weight:700">费用</div>
+      <div style="font-size:11px;color:#8a94a6;margin-top:4px">账单 · 押金 · 票据</div>
+    </div>
+    <div class="chips"><span class="chip active">账单</span><span class="chip" data-goto="deposit">押金</span><span class="chip" data-goto="invoice">票据</span></div>
+    <div class="body" style="padding-top:2px">
+      <div class="bill-summary">
+        <div class="label">待缴费用合计（含滞纳金）</div>
+        <div class="money">¥3,133.00</div>
+        <div class="split"><span>累计已缴 ¥3,099.00</span><span>共 3 期账单</span></div>
+        <div class="penalty">含滞纳金 ¥34.00 · 逾期 1 期</div>
+      </div>
+
+      <div class="bill-card">
+        <div class="top">
+          <div><div class="bill-month">2026-12</div><div class="bill-type">月度账单</div></div>
+          <div class="bill-amount">¥3,099.00<small>已付 ¥0.00</small></div>
+        </div>
+        <div class="bill-meta"><span>待付 ¥3,099.00</span><span style="color:#f05a5a">待支付</span></div>
+        <div style="margin-top:10px;text-align:right"><span style="font-size:12px;color:#fff;background:#2fa36b;padding:7px 14px;border-radius:8px;cursor:pointer">立即缴费</span></div>
+      </div>
+
+      <div class="bill-card">
+        <div class="top">
+          <div><div class="bill-month">2026-10</div><div class="bill-type">月度账单</div></div>
+          <div class="bill-tags"><span class="status warn">逾期 34 天</span><span class="status warn">部分已付</span></div>
+        </div>
+        <div class="bill-meta"><span>已付 ¥1,000.00 · 待付 ¥1,934.00</span><span>账单金额 ¥2,900.00</span></div>
+        <div class="penalty-row"><span>滞纳金 ¥34.00</span><span>待收合计 ¥1,968.00</span></div>
+        <div style="margin-top:10px;font-size:11px;color:#217a4f;cursor:pointer">查看明细与收款记录 ›</div>
+      </div>
+
+      <div class="quick-row">
+        <div class="quick-box" data-goto="deposit">
+          <div class="q-label">押金余额</div><div class="q-value">¥9,000.00</div><div class="q-desc">查看收退流水 ›</div>
+        </div>
+        <div class="quick-box" data-goto="invoice">
+          <div class="q-label">电子票据</div><div class="q-value">3 张</div><div class="q-desc">预览 / 保存 ›</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  ${tabbar('bill')}`;
+}
+
+function mineHtml() {
+  return `
+  <div class="statusbar"><span>9:41</span><span class="right"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="battery"></span></span></div>
+  <div class="viewport">
+    <div class="profile">
+      <div class="avatar" style="width:58px;height:58px;border-radius:18px;font-size:24px">张</div>
+      <div style="flex:1">
+        <div class="profile-name">张敏</div>
+        <div class="profile-sub">老人的女儿 · 13822220001</div>
+      </div>
+      <div class="hero-chip">已绑定 1 位</div>
+    </div>
+    <div class="body" style="margin-top:14px">
+      <div class="menu-card">
+        <div class="menu-item" data-goto="home"><div class="menu-icon">档</div><div><div class="menu-title">老人档案</div><div class="menu-desc">基本信息 · 健康信息 · 家属关系</div></div><div class="arrow">›</div></div>
+        <div class="menu-item" data-goto="health"><div class="menu-icon">健</div><div><div class="menu-title">健康趋势</div><div class="menu-desc">血压 · 血糖 · 体温</div></div><div class="arrow">›</div></div>
+        <div class="menu-item" data-goto="checkin"><div class="menu-icon">住</div><div><div class="menu-title">入住 / 退住进度</div><div class="menu-desc">当前节点与待办材料</div></div><div class="arrow">›</div></div>
+      </div>
+      <div class="menu-group-title">家属服务</div>
+      <div class="menu-card">
+        <div class="menu-item" data-goto="service"><div class="menu-icon">访</div><div><div class="menu-title">探访预约</div><div class="menu-desc">预约到院探访并查看进度</div></div><div class="arrow">›</div></div>
+        <div class="menu-item" data-goto="message"><div class="menu-icon">信</div><div><div class="menu-title">消息中心</div><div class="menu-desc">账单、探访与机构通知</div></div><div class="arrow">›</div></div>
+        <div class="menu-item" data-goto="evaluate"><div class="menu-icon">评</div><div><div class="menu-title">意见反馈</div><div class="menu-desc">服务评价与建议</div></div><div class="arrow">›</div></div>
+      </div>
+      <button class="ghost-btn">退出登录</button>
+      <div style="text-align:center;font-size:10px;color:#c9cdd4;margin-top:14px">中州颐养 · 家属端 v1.0</div>
+    </div>
+  </div>
+  ${tabbar('mine')}`;
+}
+
+function depositHtml() {
+  return `
+  <div class="statusbar dark"><span>9:41</span><span class="right"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="battery"></span></span></div>
+  <div class="sub-header"><div class="back" data-goto="bill">‹</div><div class="sub-title">押金</div><div class="sub-tip">只读</div></div>
+  <div class="viewport">
+    <div class="body" style="padding-top:14px">
+      <div class="balance-card">
+        <div class="balance-label">当前押金余额</div>
+        <div class="balance-value">¥9,000.00</div>
+        <div class="balance-note">张伟 · 3F-101 房 · 押金由机构统一管理</div>
+      </div>
+      <div class="section-head"><span class="section-title">收退流水</span><span class="section-tip">共 2 笔</span></div>
+      <div class="timeline">
+        <div class="tl-item in">
+          <div class="tl-line"><span class="tl-dot"></span><span class="tl-stem"></span></div>
+          <div class="tl-content"><div class="tl-title">收押金 <span class="status ok">已入账</span></div><div class="tl-desc">现金 · 经办人 王会计 · 2026-03-01 10:20</div></div>
+          <div class="tl-amount">+¥10,000.00</div>
+        </div>
+        <div class="tl-item out">
+          <div class="tl-line"><span class="tl-dot gray"></span></div>
+          <div class="tl-content"><div class="tl-title">退押金 <span class="status info">已退还</span></div><div class="tl-desc">银行转账 · 经办人 王会计 · 2026-08-15 14:30</div></div>
+          <div class="tl-amount">-¥1,000.00</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:12px 14px;background:#fff;border-radius:12px;font-size:11px;color:#8a94a6;line-height:1.7">
+        押金收退由机构财务操作，家属端仅展示余额与流水。如对金额有疑问，请联系护理站核对。
+      </div>
+    </div>
+  </div>`;
+}
+
+function messageHtml() {
+  return `
+  <div class="statusbar dark"><span>9:41</span><span class="right"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="battery"></span></span></div>
+  <div class="sub-header"><div class="back" data-goto="home">‹</div><div class="sub-title">消息中心</div><div class="sub-tip">2 条未读</div></div>
+  <div class="chips"><span class="chip active">全部</span><span class="chip">账单</span><span class="chip">探访</span><span class="chip">报告</span></div>
+  <div class="viewport">
+    <div class="body" style="padding-top:2px">
+      <div class="msg-item" data-goto="bill">
+        <div class="msg-top"><span class="msg-type warn">账单提醒</span><span class="msg-time">11-01 10:20</span></div>
+        <div class="msg-title"><span class="unread"></span>2026-12 账单已生成</div>
+        <div class="msg-text">本期应缴 ¥3,099.00，请于 2026-12-31 前完成缴费。</div>
+      </div>
+      <div class="msg-item" data-goto="bill">
+        <div class="msg-top"><span class="msg-type warn">逾期提醒</span><span class="msg-time">10-15 09:00</span></div>
+        <div class="msg-title"><span class="unread"></span>2026-10 账单已逾期</div>
+        <div class="msg-text">当前逾期 34 天，产生滞纳金 ¥34.00，请尽快处理。</div>
+      </div>
+      <div class="msg-item" data-goto="checkin">
+        <div class="msg-top"><span class="msg-type">探访通知</span><span class="msg-time">昨天 16:40</span></div>
+        <div class="msg-title">探访预约已确认</div>
+        <div class="msg-text">11-08 10:00 · 2 人 · 请到院后在一楼前台登记。</div>
+      </div>
+      <div class="msg-item" data-goto="health">
+        <div class="msg-top"><span class="msg-type">报告通知</span><span class="msg-time">11-01 08:30</span></div>
+        <div class="msg-title">新的健康报告已生成</div>
+        <div class="msg-text">2026-10 月度健康报告已生成，评分 78 分，建议关注血压。</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function invoiceHtml() {
+  return `
+  <div class="statusbar dark"><span>9:41</span><span class="right"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="battery"></span></span></div>
+  <div class="sub-header"><div class="back" data-goto="bill">‹</div><div class="sub-title">电子票据</div><div class="sub-tip">示例</div></div>
+  <div class="chips"><span class="chip">2026-10</span><span class="chip active">2026-11</span><span class="chip">2026-12</span></div>
+  <div class="viewport">
+    <div class="body" style="padding-top:2px">
+      <div class="invoice-card">
+        <div class="invoice-head">
+          <div class="invoice-title">费用结算单</div>
+          <div class="invoice-sub">中州养老院 · 电子收据（示意）</div>
+        </div>
+        <div class="invoice-row"><span>老人姓名</span><b>张伟</b></div>
+        <div class="invoice-row"><span>房间 / 床位</span><b>3F-101 / 1011</b></div>
+        <div class="invoice-row"><span>账单月份</span><b>2026-11</b></div>
+        <div class="invoice-row"><span>账单编号</span><b>ZD20261101003</b></div>
+        <div class="invoice-row"><span>床位费</span><b>¥1,500.00</b></div>
+        <div class="invoice-row"><span>护理费</span><b>¥1,200.00</b></div>
+        <div class="invoice-row"><span>餐费</span><b>¥399.00</b></div>
+        <div class="invoice-total"><span>合计</span><span>¥3,099.00</span></div>
+      </div>
+      <button class="primary-btn">保存到相册</button>
+      <button class="ghost-btn">转发给家人</button>
+      <div style="margin-top:12px;text-align:center;font-size:10px;color:#8a94a6">电子票据与纸质票据具有同等效力</div>
+    </div>
+  </div>`;
+}
+
+function healthHtml() {
+  return `
+  <div class="statusbar dark"><span>9:41</span><span class="right"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="battery"></span></span></div>
+  <div class="sub-header"><div class="back" data-goto="home">‹</div><div class="sub-title">健康趋势</div><div class="sub-tip">近 7 次</div></div>
+  <div class="viewport">
+    <div class="body" style="padding-top:12px">
+      <div class="score-card">
+        <div class="score-val">78</div>
+        <div class="score-desc">综合健康评分 · 需要关注 · 2026-10 月度报告</div>
+      </div>
+      <div class="metric-grid">
+        <div class="metric"><div class="metric-label">血压</div><div class="metric-value">138/86<span class="metric-unit">mmHg</span></div></div>
+        <div class="metric"><div class="metric-label">血糖</div><div class="metric-value">6.2<span class="metric-unit">mmol/L</span></div></div>
+        <div class="metric"><div class="metric-label">体温</div><div class="metric-value">36.5<span class="metric-unit">℃</span></div></div>
+      </div>
+      <div class="list-card">
+        <div class="list-top"><span class="list-name">近 7 次收缩压</span><span class="status warn">轻度偏高</span></div>
+        <div class="bars"><i style="height:42%"></i><i style="height:50%"></i><i style="height:46%"></i><i style="height:62%"></i><i style="height:58%"></i><i style="height:70%"></i><i style="height:66%"></i></div>
+        <div class="row"><span>区间</span><b>128 ~ 142 mmHg</b></div>
+      </div>
+      <div class="list-card">
+        <div class="list-top"><span class="list-name">最近记录</span><span class="section-tip">全部 ›</span></div>
+        <div class="row"><span>11-03 08:10 · 血压</span><b>138 / 86</b></div>
+        <div class="row"><span>11-02 08:00 · 血糖</span><b>6.2</b></div>
+        <div class="row"><span>11-01 09:00 · 体温</span><b>36.5 ℃</b></div>
+      </div>
+      <div style="padding:12px 14px;background:#fff;border-radius:12px;font-size:11px;color:#8a94a6;line-height:1.7">
+        体征数据由护理员每日录入，家属端仅作查看。异常指标请联系护理站。
+      </div>
+    </div>
+  </div>`;
+}
+
+function checkinHtml() {
+  return `
+  <div class="statusbar dark"><span>9:41</span><span class="right"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="battery"></span></span></div>
+  <div class="sub-header"><div class="back" data-goto="home">‹</div><div class="sub-title">入住进度</div><div class="sub-tip">只读</div></div>
+  <div class="viewport">
+    <div class="body" style="padding-top:14px">
+      <div class="list-card" style="background:linear-gradient(135deg,#2fa36b,#5bc08d);color:#fff;box-shadow:0 10px 24px rgba(47,163,107,.22)">
+        <div style="font-size:11px;color:rgba(255,255,255,.85)">当前状态</div>
+        <div style="font-size:18px;font-weight:700;margin-top:4px">已入住 · 3F-101 房 / 1011 床</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.85);margin-top:6px">入住日期 2026-03-01 · 责任护理员 李秀兰</div>
+      </div>
+      <div class="section-head"><span class="section-title">入住流程</span><span class="section-tip">机构已审核完成</span></div>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-line"><span class="tl-dot"></span><span class="tl-stem"></span></div><div class="tl-content"><div class="tl-title">提交入住申请 <span class="status ok">完成</span></div><div class="tl-desc">2026-02-20 · 家属张敏提交</div></div></div>
+        <div class="tl-item"><div class="tl-line"><span class="tl-dot"></span><span class="tl-stem"></span></div><div class="tl-content"><div class="tl-title">健康评估 <span class="status ok">完成</span></div><div class="tl-desc">评估结果：半自理 · 2026-02-22</div></div></div>
+        <div class="tl-item"><div class="tl-line"><span class="tl-dot"></span><span class="tl-stem"></span></div><div class="tl-content"><div class="tl-title">选房与床位 <span class="status ok">完成</span></div><div class="tl-desc">3F-101 房 · 1011 床 · 2026-02-25</div></div></div>
+        <div class="tl-item"><div class="tl-line"><span class="tl-dot"></span><span class="tl-stem"></span></div><div class="tl-content"><div class="tl-title">合同签署 <span class="status ok">完成</span></div><div class="tl-desc">合同编号 HT20260301001</div></div></div>
+        <div class="tl-item"><div class="tl-line"><span class="tl-dot"></span><span class="tl-stem"></span></div><div class="tl-content"><div class="tl-title">首期缴费 <span class="status ok">完成</span></div><div class="tl-desc">首期账单已结清 · 押金 ¥10,000.00</div></div></div>
+        <div class="tl-item"><div class="tl-line"><span class="tl-dot"></span></div><div class="tl-content"><div class="tl-title">办理入住 <span class="status ok">完成</span></div><div class="tl-desc">2026-03-01 · 已正式入住</div></div></div>
+      </div>
+      <div class="menu-card" style="margin-top:12px">
+        <div class="menu-item"><div class="menu-icon">退</div><div><div class="menu-title">退住结算进度</div><div class="menu-desc">如申请退住，可在此查看结算进度</div></div><div class="arrow">›</div></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function evaluateHtml() {
+  return `
+  <div class="statusbar dark"><span>9:41</span><span class="right"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="battery"></span></span></div>
+  <div class="sub-header"><div class="back" data-goto="service">‹</div><div class="sub-title">服务反馈</div><div class="sub-tip">已完成</div></div>
+  <div class="viewport">
+    <div class="body" style="padding-top:12px">
+      <div class="list-card">
+        <div class="list-top"><span class="list-name">助浴服务</span><span class="status ok">已完成</span></div>
+        <div class="row"><span>服务时间</span><b>2026-11-03 09:30</b></div>
+        <div class="row"><span>护理员</span><b>李秀兰</b></div>
+        <div class="row"><span>服务单号</span><b>SO20261103001</b></div>
+        <div class="feedback"><span>执行反馈：</span>老人配合良好，皮肤无异常，已协助更换衣物。</div>
+      </div>
+      <div class="section-head"><span class="section-title">本次服务满意度</span><span class="section-tip">您的评价会同步机构</span></div>
+      <div class="evaluate-card">
+        <div class="rate-row">
+          <div class="rate active">非常满意</div>
+          <div class="rate">满意</div>
+          <div class="rate">一般</div>
+          <div class="rate">需改进</div>
+        </div>
+        <textarea placeholder="补充建议（选填，最多 200 字）"></textarea>
+        <button class="primary-btn">提交评价</button>
+        <div style="margin-top:10px;text-align:center;font-size:10px;color:#8a94a6">评价提交后不可修改，请确认后再提交</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function tabbar(active) {
+  const tabs = [
+    { key: 'home', icon: '首', label: '首页' },
+    { key: 'service', icon: '服', label: '服务' },
+    { key: 'bill', icon: '费', label: '费用' },
+    { key: 'mine', icon: '我', label: '我的' }
+  ];
+  return `
+  <div class="tabbar">
+    ${tabs.map(t => `
+      <div class="tab ${t.key === active ? 'active' : ''}" data-goto="${t.key}">
+        <div class="icon">${t.icon}</div><div>${t.label}</div>
+      </div>`).join('')}
+  </div>`;
+}
+
+const state = { current: 'home' };
+
+function renderNav() {
+  const groups = [['main', 'nav-main'], ['sub', 'nav-sub']];
+  groups.forEach(([group, elId]) => {
+    document.getElementById(elId).innerHTML = SCREENS.filter(s => s.group === group).map(s => `
+      <div class="nav-item ${s.id === state.current ? 'active' : ''}" data-screen="${s.id}">
+        <span class="dot"></span><span>${s.nav}</span>
+        <span class="tag">${s.badge}</span>
+      </div>`).join('');
+  });
+}
+
+function renderNotes(screen) {
+  const n = screen.notes;
+  const statusMap = {
+    have: ['已在现有功能中', 'have'],
+    mix: ['部分已有 / 部分待新增', 'new'],
+    new: ['建议新增', 'new']
+  };
+  const [label, cls] = statusMap[n.status] || ['', ''];
+  document.getElementById('notes').innerHTML = `
+    <div class="side-title">${screen.nav} · 设计说明</div>
+    <div class="note-block">
+      <div class="note-label">页面目标</div>
+      <div class="note-value">${n.goal}</div>
+    </div>
+    <div class="note-block">
+      <div class="note-label">承载的后端能力</div>
+      <div class="note-value">${n.ability}</div>
+    </div>
+    <div class="note-block">
+      <div class="note-label">对应接口</div>
+      <div class="note-value"><code>${n.api}</code></div>
+    </div>
+    <div class="note-block">
+      <div class="note-label">实现状态</div>
+      <div class="note-value"><span class="note-status ${cls}">${label}</span></div>
+    </div>
+    <div class="note-block">
+      <div class="note-label">边界说明</div>
+      <div class="note-value">家属端只展示与自己绑定老人的数据；审批、收款、押金收退、房间床位维护等操作仍在 Web 后台完成。</div>
+    </div>`;
+}
+
+function render() {
+  const screen = SCREENS.find(s => s.id === state.current) || SCREENS[0];
+  document.getElementById('screen').innerHTML = screen.html;
+  renderNav();
+  renderNotes(screen);
+  const viewport = document.querySelector('.viewport');
+  if (viewport) viewport.scrollTop = 0;
+}
+
+document.addEventListener('click', (e) => {
+  const screenBtn = e.target.closest('[data-screen]');
+  if (screenBtn) {
+    state.current = screenBtn.getAttribute('data-screen');
+    render();
+    return;
+  }
+  const gotoBtn = e.target.closest('[data-goto]');
+  if (gotoBtn) {
+    const target = gotoBtn.getAttribute('data-goto');
+    if (SCREENS.some(s => s.id === target)) {
+      state.current = target;
+      render();
+    }
+  }
+});
+
+render();
+</script>
+</body>
+</html>

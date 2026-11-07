@@ -1,0 +1,115 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  padding: 0 $page-padding calc(#{$spacing-xl} + env(safe-area-inset-bottom));
+  background: $color-bg-page;
+}
+
+.header {
+  padding: $spacing-lg 0 $spacing-md;
+}
+
+.title {
+  display: block;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+}
+
+.subtitle {
+  display: block;
+  margin-top: 6rpx;
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.filters {
+  display: flex;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+}
+
+.filter {
+  padding: 10rpx 24rpx;
+  border-radius: $radius-round;
+  background: $color-bg-card;
+  border: 1rpx solid $color-border;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.filterActive {
+  background: $color-primary;
+  border-color: $color-primary;
+  color: #ffffff;
+}
+
+.card {
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-xs;
+}
+
+.type {
+  padding: 4rpx 14rpx;
+  border-radius: $radius-xs;
+  background: $color-primary-soft;
+  color: $color-primary-dark;
+  font-size: $font-size-xs;
+}
+
+.typeWarn {
+  padding: 4rpx 14rpx;
+  border-radius: $radius-xs;
+  background: $color-warning-soft;
+  color: $color-warning;
+  font-size: $font-size-xs;
+}
+
+.time {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.cardTitle {
+  display: block;
+  margin-top: $spacing-xs;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+}
+
+.content {
+  display: block;
+  margin-top: $spacing-xs;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+}
+
+.elder {
+  display: block;
+  margin-top: $spacing-xs;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.notice {
+  padding: $spacing-md;
+  border-radius: $radius-md;
+  background: $color-bg-card;
+}
+
+.noticeText {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  line-height: $line-height-loose;
+}

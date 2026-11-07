@@ -1,0 +1,60 @@
+# ============================================
+# 中州养老管理系统 - 一键启动脚本
+# 用法：右键"使用 PowerShell 运行"，或在 PowerShell 中执行 .\start-all.ps1
+# 访问：http://localhost   账号：admin / admin123
+# ============================================
+
+$RedisDir  = "D:\中州养老项目资料\中州养老项目资料\资料\Redis-x64-5.0.14.1"
+$JavaExe   = "D:\idea2022\jdk11\jdk11\bin\java.exe"
+$Jar       = "d:\sxunkaifa\xitongkaifa\zhongzhou-backend\ruoyi-admin\target\ruoyi-admin.jar"
+$UiDir     = "d:\sxunkaifa\xitongkaifa\zhongzhou-ui"
+
+function Test-PortUp($p) {
+    (Test-NetConnection -ComputerName localhost -Port $p -InformationLevel Quiet -WarningAction SilentlyContinue)
+}
+
+# 1. MySQL（系统服务，通常已自动运行）
+if (Get-Service MySQL80 -ErrorAction SilentlyContinue | Where-Object {$_.Status -ne "Running"}) {
+    Start-Service MySQL80
+    "[START] MySQL 服务已启动"
+} else {
+    "[OK] MySQL 服务运行中"
+}
+
+# 2. Redis（绿色版，手动拉起）
+if (Test-PortUp 6379) {
+    "[OK] Redis 已在运行"
+} else {
+    Start-Process "$RedisDir\redis-server.exe" -ArgumentList "`"$RedisDir\redis.windows.conf`"" -WorkingDirectory $RedisDir -WindowStyle Minimized
+    "[START] Redis 启动中..."
+}
+
+# 3. 后端（SpringBoot，约需 30 秒）
+if (Test-PortUp 8080) {
+    "[OK] 后端已在运行 (8080)"
+} else {
+    if (-not (Test-Path $Jar)) { "[ERROR] 找不到后端 jar，请先执行 Maven 打包"; exit 1 }
+    Start-Process $JavaExe -ArgumentList "-jar `"$Jar`"" -WindowStyle Minimized
+    "[START] 后端启动中（约 30 秒）..."
+}
+
+# 4. 前端（Vite 开发服务器，占用 80 端口）
+if (Test-PortUp 80) {
+    "[OK] 前端已在运行 (80)"
+} else {
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$UiDir'; npm run dev" -WindowStyle Minimized
+    "[START] 前端启动中..."
+}
+
+# 5. 等待并输出最终状态
+Start-Sleep -Seconds 20
+""
+"================ 启动状态 ================"
+"Redis  (6379): $(Test-PortUp 6379)"
+"后端   (8080): $(Test-PortUp 8080)"
+"前端   (80)  : $(Test-PortUp 80)"
+""
+"浏览器访问: http://localhost"
+"登录账号  : admin / admin123"
+"========================================="
+pause

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.ServiceOrderMapper">
+
+	<resultMap type="ServiceOrder" id="ServiceOrderResult">
+		<id     property="orderId"     column="order_id"     />
+		<result property="orderNo"     column="order_no"     />
+		<result property="elderId"     column="elder_id"     />
+		<result property="elderName"   column="elder_name"   />
+		<result property="itemId"      column="item_id"      />
+		<result property="itemName"    column="item_name"    />
+		<result property="nurseId"     column="nurse_id"     />
+		<result property="nurseName"   column="nurse_name"   />
+		<result property="serviceTime" column="service_time" />
+		<result property="amount"      column="amount"       />
+		<result property="status"      column="status"       />
+		<result property="checkinTime"  column="checkin_time"  />
+		<result property="checkinOperator" column="checkin_operator" />
+		<result property="finishTime"   column="finish_time"   />
+		<result property="finishOperator" column="finish_operator" />
+		<result property="serviceRemark" column="service_remark" />
+		<result property="remark"      column="remark"       />
+		<result property="tenantId"    column="tenant_id"    />
+		<result property="delFlag"     column="del_flag"     />
+		<result property="createBy"    column="create_by"    />
+		<result property="createTime"  column="create_time"  />
+		<result property="updateBy"    column="update_by"    />
+		<result property="updateTime"  column="update_time"  />
+	</resultMap>
+
+	<sql id="selectServiceOrderVo">
+		select order_id, order_no, elder_id, elder_name, item_id, item_name, nurse_id, nurse_name,
+		       service_time, amount, status, checkin_time, checkin_operator, finish_time, finish_operator,
+		       service_remark, remark,
+		       tenant_id, del_flag, create_by, create_time, update_by, update_time
+		from biz_service_order
+	</sql>
+
+	<select id="selectServiceOrderList" parameterType="ServiceOrder" resultMap="ServiceOrderResult">
+		<include refid="selectServiceOrderVo"/>
+		<where>
+			del_flag = '0'
+			<if test="elderId != null">
+				AND elder_id = #{elderId}
+			</if>
+			<if test="elderName != null and elderName != ''">
+				AND elder_name like concat('%', #{elderName}, '%')
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="orderNo != null and orderNo != ''">
+				AND order_no like concat('%', #{orderNo}, '%')
+			</if>
+		</where>
+		order by order_id desc
+	</select>
+
+	<select id="selectServiceOrderById" parameterType="Long" resultMap="ServiceOrderResult">
+		<include refid="selectServiceOrderVo"/>
+		where order_id = #{orderId} and del_flag = '0'
+	</select>
+
+	<insert id="insertServiceOrder" parameterType="ServiceOrder" useGeneratedKeys="true" keyProperty="orderId">
+		insert into biz_service_order(
+			order_no,
+			elder_id,
+			<if test="elderName != null">elder_name,</if>
+			item_id,
+			<if test="itemName != null">item_name,</if>
+			<if test="nurseId != null">nurse_id,</if>
+			<if test="nurseName != null">nurse_name,</if>
+			<if test="serviceTime != null">service_time,</if>
+			<if test="amount != null">amount,</if>
+			<if test="status != null">status,</if>
+			<if test="remark != null">remark,</if>
+			tenant_id,
+			del_flag,
+			create_by,
+			create_time
+		)values(
+			#{orderNo},
+			#{elderId},
+			<if test="elderName != null">#{elderName},</if>
+			#{itemId},
+			<if test="itemName != null">#{itemName},</if>
+			<if test="nurseId != null">#{nurseId},</if>
+			<if test="nurseName != null">#{nurseName},</if>
+			<if test="serviceTime != null">#{serviceTime},</if>
+			<if test="amount != null">#{amount},</if>
+			<if test="status != null">#{status},</if>
+			<if test="remark != null">#{remark},</if>
+			#{tenantId},
+			'0',
+			#{createBy},
+			sysdate()
+		)
+	</insert>
+
+	<update id="updateServiceOrder" parameterType="ServiceOrder">
+		update biz_service_order
+		<set>
+			<if test="elderId != null">elder_id = #{elderId},</if>
+			<if test="elderName != null">elder_name = #{elderName},</if>
+			<if test="itemId != null">item_id = #{itemId},</if>
+			<if test="itemName != null">item_name = #{itemName},</if>
+			<if test="nurseId != null">nurse_id = #{nurseId},</if>
+			<if test="nurseName != null">nurse_name = #{nurseName},</if>
+			<if test="serviceTime != null">service_time = #{serviceTime},</if>
+			<if test="amount != null">amount = #{amount},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="remark != null">remark = #{remark},</if>
+			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		</set>
+		where order_id = #{orderId}
+	</update>
+
+	<update id="deleteServiceOrderByIds" parameterType="Long">
+		update biz_service_order set del_flag = '2' where order_id in
+		<foreach collection="array" item="orderId" open="(" separator="," close=")">
+			#{orderId}
+		</foreach>
+	</update>
+
+	<update id="executeOrder">
+		update biz_service_order set status = '1',
+			checkin_time = sysdate(),
+			checkin_operator = #{operator},
+			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		where order_id = #{orderId} and status = '0'
+	</update>
+
+	<update id="completeOrder">
+		update biz_service_order set status = '2',
+			finish_time = sysdate(),
+			finish_operator = #{operator},
+			<if test="serviceRemark != null and serviceRemark != ''">service_remark = #{serviceRemark},</if>
+			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		where order_id = #{orderId} and status = '1'
+	</update>
+
+	<!-- 护理员视角"我的待办"：按 nurseId + status in (0,1) 过滤 -->
+	<select id="selectMyOrders" resultMap="ServiceOrderResult">
+		<include refid="selectServiceOrderVo"/>
+		where del_flag = '0' and status in ('0','1')
+		  and nurse_id = #{nurseId}
+		order by service_time asc, order_id asc
+	</select>
+
+</mapper>

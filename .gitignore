@@ -1,0 +1,43 @@
+# 依赖
+node_modules/
+
+# 构建产物
+dist/
+target/
+*.class
+*.war
+*.jar
+!**/maven-wrapper.jar
+
+# 日志
+logs/
+*.log
+
+# 运行数据
+uploadPath/
+dump.rdb
+
+# 压缩包
+*.zip
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# Trae / 工具缓存
+.trae/
+.pai/
+.trae-html-share-packages/
+
+# 系统文件
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# 环境变量与密钥
+.env.local
+.env.*.local

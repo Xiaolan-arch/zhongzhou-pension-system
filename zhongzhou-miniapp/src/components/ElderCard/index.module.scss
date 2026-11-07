@@ -1,0 +1,83 @@
+@use '@/styles/variables.scss' as *;
+
+.card {
+  display: flex;
+  align-items: center;
+  padding: $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+}
+
+.pressable {
+  transition: all $transition-base;
+  &:active {
+    transform: scale(0.99);
+    opacity: 0.94;
+  }
+}
+
+.compact {
+  box-shadow: none;
+  background: $color-primary-soft;
+  margin-bottom: $spacing-sm;
+  padding: $spacing-md;
+}
+
+.avatar {
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: $radius-round;
+  flex-shrink: 0;
+  background: $color-bg-hover;
+}
+
+.compact .avatar {
+  width: 88rpx;
+  height: 88rpx;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+  margin-left: $spacing-md;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+}
+
+.name {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  margin-right: $spacing-sm;
+  @include text-ellipsis;
+}
+
+.meta {
+  display: block;
+  margin-top: 6rpx;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.locationRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 6rpx;
+}
+
+.location {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.nurse {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-left: $spacing-sm;
+  @include text-ellipsis;
+}

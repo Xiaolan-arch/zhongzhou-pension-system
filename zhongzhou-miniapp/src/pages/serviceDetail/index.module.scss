@@ -1,0 +1,280 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  padding: 0 $page-padding calc(#{$spacing-xl} + env(safe-area-inset-bottom));
+  background: $color-bg-page;
+}
+
+.header {
+  padding: $spacing-lg 0 $spacing-md;
+}
+
+.title {
+  display: block;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+}
+
+.subtitle {
+  display: block;
+  margin-top: 6rpx;
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.state {
+  padding: 80rpx 0;
+  text-align: center;
+}
+
+.stateText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.card {
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-sm;
+}
+
+.itemName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+}
+
+.status {
+  padding: 4rpx 14rpx;
+  border-radius: $radius-xs;
+  background: $color-primary-soft;
+  color: $color-primary-dark;
+  font-size: $font-size-xs;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6rpx 0;
+}
+
+.rowLabel {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.rowValue {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.amount {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-primary-dark;
+}
+
+.sectionHeader {
+  margin: 0 0 $spacing-sm;
+}
+
+.sectionTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+}
+
+.sectionTip {
+  margin-left: $spacing-sm;
+  font-size: $font-size-xs;
+  color: $color-primary-dark;
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: $spacing-sm;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.ratingRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+}
+
+.ratingItem {
+  padding: 12rpx 24rpx;
+  border: 1rpx solid $color-border;
+  border-radius: $radius-button;
+  background: $color-bg-page;
+}
+
+.ratingItemActive {
+  border-color: $color-primary;
+  background: $color-primary-soft;
+}
+
+.ratingText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.ratingTextActive {
+  color: $color-primary-dark;
+  font-weight: $font-weight-semibold;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 160rpx;
+  padding: $spacing-sm;
+  box-sizing: border-box;
+  border-radius: $radius-sm;
+  background: $color-bg-page;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.counter {
+  display: block;
+  margin-top: 6rpx;
+  text-align: right;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.submit {
+  margin-top: $spacing-md;
+  height: $button-height-md;
+  line-height: $button-height-md;
+  border-radius: $radius-button;
+  background: $color-primary;
+  color: #ffffff;
+  font-size: $font-size-md;
+}
+
+.formTip {
+  display: block;
+  margin-top: $spacing-sm;
+  text-align: center;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.evalTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-sm;
+}
+
+.evalRating {
+  padding: 4rpx 16rpx;
+  border-radius: $radius-xs;
+  background: $color-primary-soft;
+  color: $color-primary-dark;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+}
+
+.evalTime {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.evalContent {
+  display: block;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+}
+
+.evalTip {
+  display: block;
+  margin-top: $spacing-sm;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.feedback {
+  display: block;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+}
+
+.emptyFeedback {
+  display: block;
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.remark {
+  display: block;
+  margin-top: $spacing-sm;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  line-height: $line-height-loose;
+}
+
+.notice {
+  padding: $spacing-md;
+  border-radius: $radius-md;
+  background: $color-bg-card;
+}
+
+.noticeText {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  line-height: $line-height-loose;
+}
+
+/* ============ 售后与反馈 ============ */
+
+.afterSaleRow {
+  display: flex;
+  align-items: center;
+  padding: $spacing-md 0;
+  border-bottom: 2rpx dashed $color-border;
+}
+.afterSaleRow:last-child { border-bottom: none; }
+
+.afterSaleTitle {
+  display: block;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.afterSaleDesc {
+  display: block;
+  margin-top: 4rpx;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.afterSaleBtn {
+  background: $color-primary;
+  color: #fff;
+  font-size: $font-size-sm;
+  border-radius: 32rpx;
+  padding: 0 24rpx;
+}
+.afterSaleBtnDanger {
+  background: #c4473d;
+  color: #fff;
+  font-size: $font-size-sm;
+  border-radius: 32rpx;
+  padding: 0 24rpx;
+}

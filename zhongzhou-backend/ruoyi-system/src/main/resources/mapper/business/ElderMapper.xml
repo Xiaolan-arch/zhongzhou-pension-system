@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.ElderMapper">
+
+	<resultMap type="Elder" id="ElderResult">
+		<id     property="elderId"        column="elder_id"        />
+		<result property="elderName"      column="elder_name"      />
+		<result property="gender"         column="gender"          />
+		<result property="idCard"         column="id_card"         />
+		<result property="birthday"       column="birthday"        />
+		<result property="age"            column="age"             />
+		<result property="phone"          column="phone"           />
+		<result property="address"        column="address"         />
+		<result property="careLevel"      column="care_level"      />
+		<result property="checkinDate"    column="checkin_date"    />
+		<result property="status"         column="status"          />
+		<result property="avatar"         column="avatar"          />
+		<result property="familyName"     column="family_name"     />
+		<result property="familyRelation" column="family_relation" />
+		<result property="familyPhone"    column="family_phone"    />
+		<result property="remark"         column="remark"          />
+		<result property="tenantId"       column="tenant_id"       />
+		<result property="delFlag"        column="del_flag"        />
+		<result property="createBy"       column="create_by"       />
+		<result property="createTime"     column="create_time"     />
+		<result property="updateBy"       column="update_by"       />
+		<result property="updateTime"     column="update_time"     />
+	</resultMap>
+
+	<sql id="selectElderVo">
+		select elder_id, elder_name, gender, id_card, birthday, age, phone, address,
+		       care_level, checkin_date, status, avatar, family_name, family_relation, family_phone,
+		       remark, tenant_id, del_flag, create_by, create_time, update_by, update_time
+		from biz_elder
+	</sql>
+
+	<select id="selectElderList" parameterType="Elder" resultMap="ElderResult">
+		<include refid="selectElderVo"/>
+		<where>
+			del_flag = '0'
+			<if test="elderName != null and elderName != ''">
+				AND elder_name like concat('%', #{elderName}, '%')
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="gender != null and gender != ''">
+				AND gender = #{gender}
+			</if>
+			<if test="careLevel != null and careLevel != ''">
+				AND care_level = #{careLevel}
+			</if>
+		</where>
+		order by elder_id
+	</select>
+
+	<select id="selectElderById" parameterType="Long" resultMap="ElderResult">
+		<include refid="selectElderVo"/>
+		where elder_id = #{elderId} and del_flag = '0'
+	</select>
+
+	<insert id="insertElder" parameterType="Elder" useGeneratedKeys="true" keyProperty="elderId">
+		insert into biz_elder(
+			elder_name,
+			<if test="gender != null">gender,</if>
+			<if test="idCard != null">id_card,</if>
+			<if test="birthday != null">birthday,</if>
+			<if test="age != null">age,</if>
+			<if test="phone != null">phone,</if>
+			<if test="address != null">address,</if>
+			<if test="careLevel != null">care_level,</if>
+			<if test="checkinDate != null">checkin_date,</if>
+			<if test="status != null">status,</if>
+			<if test="avatar != null">avatar,</if>
+			<if test="familyName != null">family_name,</if>
+			<if test="familyRelation != null">family_relation,</if>
+			<if test="familyPhone != null">family_phone,</if>
+			<if test="remark != null">remark,</if>
+			tenant_id,
+			del_flag,
+			create_by,
+			create_time
+		)values(
+			#{elderName},
+			<if test="gender != null">#{gender},</if>
+			<if test="idCard != null">#{idCard},</if>
+			<if test="birthday != null">#{birthday},</if>
+			<if test="age != null">#{age},</if>
+			<if test="phone != null">#{phone},</if>
+			<if test="address != null">#{address},</if>
+			<if test="careLevel != null">#{careLevel},</if>
+			<if test="checkinDate != null">#{checkinDate},</if>
+			<if test="status != null">#{status},</if>
+			<if test="avatar != null">#{avatar},</if>
+			<if test="familyName != null">#{familyName},</if>
+			<if test="familyRelation != null">#{familyRelation},</if>
+			<if test="familyPhone != null">#{familyPhone},</if>
+			<if test="remark != null">#{remark},</if>
+			#{tenantId},
+			'0',
+			#{createBy},
+			sysdate()
+		)
+	</insert>
+
+	<update id="updateElder" parameterType="Elder">
+		update biz_elder
+		<set>
+			<if test="elderName != null and elderName != ''">elder_name = #{elderName},</if>
+			<if test="gender != null">gender = #{gender},</if>
+			<if test="idCard != null">id_card = #{idCard},</if>
+			<if test="birthday != null">birthday = #{birthday},</if>
+			<if test="age != null">age = #{age},</if>
+			<if test="phone != null">phone = #{phone},</if>
+			<if test="address != null">address = #{address},</if>
+			<if test="careLevel != null">care_level = #{careLevel},</if>
+			<if test="checkinDate != null">checkin_date = #{checkinDate},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="avatar != null">avatar = #{avatar},</if>
+			<if test="familyName != null">family_name = #{familyName},</if>
+			<if test="familyRelation != null">family_relation = #{familyRelation},</if>
+			<if test="familyPhone != null">family_phone = #{familyPhone},</if>
+			<if test="remark != null">remark = #{remark},</if>
+			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		</set>
+		where elder_id = #{elderId}
+	</update>
+
+	<update id="deleteElderByIds" parameterType="Long">
+		update biz_elder set del_flag = '2' where elder_id in
+		<foreach collection="array" item="elderId" open="(" separator="," close=")">
+			#{elderId}
+		</foreach>
+	</update>
+
+</mapper>

@@ -1,0 +1,59 @@
+@use '@/styles/variables.scss' as *;
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40rpx;
+  padding: 0 16rpx;
+  border-radius: $radius-xs;
+  min-width: 84rpx;
+}
+
+.text {
+  font-size: $font-size-xs;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.primary {
+  background: $color-primary-soft;
+  .text {
+    color: $color-primary-dark;
+  }
+}
+
+.success {
+  background: $color-primary-soft;
+  .text {
+    color: $color-primary-dark;
+  }
+}
+
+.warning {
+  background: $color-warning-soft;
+  .text {
+    color: #b9702a;
+  }
+}
+
+.danger {
+  background: $color-error-soft;
+  .text {
+    color: $color-error;
+  }
+}
+
+.info {
+  background: $color-info-soft;
+  .text {
+    color: #3270c4;
+  }
+}
+
+.gray {
+  background: $color-divider;
+  .text {
+    color: $color-text-tertiary;
+  }
+}

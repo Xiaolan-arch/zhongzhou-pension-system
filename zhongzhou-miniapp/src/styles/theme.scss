@@ -1,0 +1,41 @@
+// ============================================
+// 主题配色变量 · 中州养老家属端
+// 视觉：温暖治愈 · 青绿 + 暖橙点缀
+// ============================================
+
+// 品牌主题色
+$color-primary: #2fa36b;
+$color-primary-light: #5bc08d;
+$color-primary-dark: #217a4f;
+$color-primary-soft: #e8f6ee;
+
+// 功能色
+$color-success: #2fa36b;
+$color-warning: #f2a65a;
+$color-warning-soft: #fdf3e7;
+$color-error: #f05a5a;
+$color-error-soft: #fdecec;
+$color-info: #4a8ef0;
+$color-info-soft: #ecf3fd;
+
+// 背景色
+$color-bg-page: #f4f7f5;
+$color-bg-card: #ffffff;
+$color-bg-hover: #eef3f0;
+
+// 文本色
+$color-text-primary: #1d2129;
+$color-text-secondary: #4e5969;
+$color-text-tertiary: #8a94a6;
+$color-text-disabled: #c9cdd4;
+$color-text-white: #ffffff;
+
+// 边框色
+$color-border: #e8ece9;
+$color-divider: #f2f5f3;
+
+// 家属端业务色
+$color-risk-good: #2fa36b;
+$color-risk-watch: #f2a65a;
+$color-risk-warn: #f05a5a;
+$color-score: #2fa36b;

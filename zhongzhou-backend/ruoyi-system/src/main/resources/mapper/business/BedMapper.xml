@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.BedMapper">
+
+	<resultMap type="Bed" id="BedResult">
+		<id     property="bedId"        column="bed_id"       />
+		<result property="roomId"       column="room_id"      />
+		<result property="bedNo"        column="bed_no"       />
+		<result property="status"       column="status"       />
+		<result property="elderId"      column="elder_id"     />
+		<result property="tenantId"     column="tenant_id"    />
+		<result property="delFlag"      column="del_flag"     />
+		<result property="createBy"     column="create_by"    />
+		<result property="createTime"   column="create_time"  />
+		<result property="updateBy"     column="update_by"    />
+		<result property="updateTime"   column="update_time"  />
+		<result property="floorNo"      column="floor_no"     />
+		<result property="roomNo"       column="room_no"      />
+		<result property="roomType"     column="room_type"    />
+		<result property="elderName"    column="elder_name"   />
+		<result property="gender"       column="gender"       />
+		<result property="age"          column="age"          />
+		<result property="careLevel"    column="care_level"   />
+		<result property="checkinDate"  column="checkin_date" />
+	</resultMap>
+
+	<sql id="selectBedVo">
+		select bed_id, room_id, bed_no, status, elder_id, tenant_id, del_flag,
+		       create_by, create_time, update_by, update_time
+		from biz_bed
+	</sql>
+
+	<select id="selectBedList" parameterType="Bed" resultMap="BedResult">
+		<include refid="selectBedVo"/>
+		<where>
+			del_flag = '0'
+			<if test="roomId != null">
+				AND room_id = #{roomId}
+			</if>
+			<if test="bedNo != null and bedNo != ''">
+				AND bed_no like concat('%', #{bedNo}, '%')
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="elderId != null">
+				AND elder_id = #{elderId}
+			</if>
+		</where>
+		order by bed_id
+	</select>
+
+	<select id="selectBedById" parameterType="Long" resultMap="BedResult">
+		<include refid="selectBedVo"/>
+		where bed_id = #{bedId} and del_flag = '0'
+	</select>
+
+	<select id="selectBedListByRoomIds" resultMap="BedResult">
+		<include refid="selectBedVo"/>
+		where del_flag = '0' and room_id in
+		<foreach collection="roomIds" item="roomId" open="(" separator="," close=")">
+			#{roomId}
+		</foreach>
+		order by bed_no
+	</select>
+
+	<select id="selectAvailableBeds" resultMap="BedResult">
+		select b.bed_id, b.room_id, b.bed_no, b.status, b.elder_id, b.tenant_id, b.del_flag,
+		       b.create_by, b.create_time, b.update_by, b.update_time,
+		       r.floor_no, r.room_no, r.room_type
+		from biz_bed b
+		inner join biz_room r on r.room_id = b.room_id
+		where b.del_flag = '0' and r.del_flag = '0' and b.status = '0'
+		order by r.floor_no, r.room_no, b.bed_no
+	</select>
+
+	<insert id="insertBed" parameterType="Bed" useGeneratedKeys="true" keyProperty="bedId">
+		insert into biz_bed(
+			room_id,
+			bed_no,
+			<if test="status != null">status,</if>
+			<if test="elderId != null">elder_id,</if>
+			tenant_id,
+			del_flag,
+			create_by,
+			create_time
+		)values(
+			#{roomId},
+			#{bedNo},
+			<if test="status != null">#{status},</if>
+			<if test="elderId != null">#{elderId},</if>
+			#{tenantId},
+			'0',
+			#{createBy},
+			sysdate()
+		)
+	</insert>
+
+	<update id="updateBed" parameterType="Bed">
+		update biz_bed
+		<set>
+			<if test="roomId != null">room_id = #{roomId},</if>
+			<if test="bedNo != null and bedNo != ''">bed_no = #{bedNo},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="elderId != null">elder_id = #{elderId},</if>
+			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		</set>
+		where bed_id = #{bedId}
+	</update>
+
+	<update id="deleteBedByIds" parameterType="Long">
+		update biz_bed set del_flag = '2' where bed_id in
+		<foreach collection="array" item="bedId" open="(" separator="," close=")">
+			#{bedId}
+		</foreach>
+	</update>
+
+	<update id="deleteBedByRoomId" parameterType="Long">
+		update biz_bed set del_flag = '2' where room_id = #{roomId}
+	</update>
+
+</mapper>

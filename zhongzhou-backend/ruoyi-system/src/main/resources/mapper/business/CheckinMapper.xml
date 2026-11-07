@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.CheckinMapper">
+
+	<resultMap type="Checkin" id="CheckinResult">
+		<id     property="checkinId"        column="checkin_id"         />
+		<result property="applyNo"          column="apply_no"           />
+		<result property="elderName"        column="elder_name"         />
+		<result property="gender"           column="gender"             />
+		<result property="idCard"           column="id_card"            />
+		<result property="birthday"         column="birthday"           />
+		<result property="age"              column="age"                />
+		<result property="phone"            column="phone"              />
+		<result property="address"          column="address"            />
+		<result property="avatar"           column="avatar"             />
+		<result property="idCardFront"      column="id_card_front"      />
+		<result property="idCardBack"       column="id_card_back"       />
+		<result property="familyName"       column="family_name"        />
+		<result property="familyRelation"   column="family_relation"    />
+		<result property="familyPhone"      column="family_phone"       />
+		<result property="applyStatus"      column="apply_status"       />
+		<result property="selfCare"         column="self_care"          />
+		<result property="mentalState"      column="mental_state"       />
+		<result property="disease"          column="disease"            />
+		<result property="assessmentResult" column="assessment_result"  />
+		<result property="suggestCareLevel" column="suggest_care_level" />
+		<result property="assessor"         column="assessor"           />
+		<result property="assessTime"       column="assess_time"        />
+		<result property="auditResult"      column="audit_result"       />
+		<result property="auditOpinion"     column="audit_opinion"      />
+		<result property="auditor"          column="auditor"            />
+		<result property="auditTime"        column="audit_time"         />
+		<result property="roomId"           column="room_id"            />
+		<result property="bedId"            column="bed_id"             />
+		<result property="careLevel"        column="care_level"         />
+		<result property="nurseIds"         column="nurse_ids"          />
+		<result property="feeStandard"      column="fee_standard"       />
+		<result property="contractNo"       column="contract_no"        />
+		<result property="contractStart"    column="contract_start"     />
+		<result property="contractEnd"      column="contract_end"       />
+		<result property="contractFile"     column="contract_file"      />
+		<result property="signDate"         column="sign_date"          />
+		<result property="payStatus"        column="pay_status"         />
+		<result property="firstBillId"      column="first_bill_id"      />
+		<result property="checkinDate"      column="checkin_date"       />
+		<result property="tenantId"         column="tenant_id"          />
+		<result property="createBy"         column="create_by"          />
+		<result property="createTime"       column="create_time"        />
+		<result property="updateBy"         column="update_by"          />
+		<result property="updateTime"       column="update_time"        />
+		<result property="remark"           column="remark"             />
+	</resultMap>
+
+	<sql id="selectCheckinVo">
+		select checkin_id, apply_no, elder_name, gender, id_card, birthday, age, phone, address, avatar,
+			   id_card_front, id_card_back, family_name, family_relation, family_phone, apply_status,
+			   self_care, mental_state, disease, assessment_result, suggest_care_level, assessor, assess_time,
+			   audit_result, audit_opinion, auditor, audit_time, room_id, bed_id, care_level, nurse_ids,
+			   fee_standard, contract_no, contract_start, contract_end, contract_file, sign_date, pay_status,
+			   first_bill_id, checkin_date, tenant_id, create_by, create_time, update_by, update_time, remark
+		from biz_checkin
+	</sql>
+
+	<select id="selectCheckinList" parameterType="Checkin" resultMap="CheckinResult">
+		<include refid="selectCheckinVo"/>
+		where del_flag = '0'
+		<if test="elderName != null and elderName != ''">
+			and elder_name like concat('%', #{elderName}, '%')
+		</if>
+		<if test="applyStatus != null and applyStatus != ''">
+			and apply_status = #{applyStatus}
+		</if>
+		order by checkin_id desc
+	</select>
+
+	<select id="selectCheckinById" parameterType="Long" resultMap="CheckinResult">
+		<include refid="selectCheckinVo"/>
+		where checkin_id = #{checkinId} and del_flag = '0'
+	</select>
+
+	<insert id="insertCheckin" parameterType="Checkin" useGeneratedKeys="true" keyProperty="checkinId">
+		insert into biz_checkin(
+			apply_no, elder_name, gender, id_card, birthday, age, phone, address, avatar,
+			id_card_front, id_card_back, family_name, family_relation, family_phone, apply_status,
+			self_care, mental_state, disease, assessment_result, suggest_care_level, assessor, assess_time,
+			room_id, bed_id, care_level, nurse_ids, fee_standard, contract_no, contract_start, contract_end,
+			contract_file, sign_date, pay_status, checkin_date, tenant_id, del_flag, create_by, create_time, remark
+		)values(
+			#{applyNo}, #{elderName}, #{gender}, #{idCard}, #{birthday}, #{age}, #{phone}, #{address}, #{avatar},
+			#{idCardFront}, #{idCardBack}, #{familyName}, #{familyRelation}, #{familyPhone}, #{applyStatus},
+			#{selfCare}, #{mentalState}, #{disease}, #{assessmentResult}, #{suggestCareLevel}, #{assessor}, #{assessTime},
+			#{roomId}, #{bedId}, #{careLevel}, #{nurseIds}, #{feeStandard}, #{contractNo}, #{contractStart}, #{contractEnd},
+			#{contractFile}, #{signDate}, #{payStatus}, #{checkinDate}, #{tenantId}, '0', #{createBy}, sysdate(), #{remark}
+		)
+	</insert>
+
+	<update id="updateCheckin" parameterType="Checkin">
+		update biz_checkin
+		<set>
+			<if test="elderName != null">elder_name = #{elderName},</if>
+			<if test="gender != null">gender = #{gender},</if>
+			<if test="idCard != null">id_card = #{idCard},</if>
+			<if test="birthday != null">birthday = #{birthday},</if>
+			<if test="age != null">age = #{age},</if>
+			<if test="phone != null">phone = #{phone},</if>
+			<if test="address != null">address = #{address},</if>
+			<if test="avatar != null">avatar = #{avatar},</if>
+			<if test="idCardFront != null">id_card_front = #{idCardFront},</if>
+			<if test="idCardBack != null">id_card_back = #{idCardBack},</if>
+			<if test="familyName != null">family_name = #{familyName},</if>
+			<if test="familyRelation != null">family_relation = #{familyRelation},</if>
+			<if test="familyPhone != null">family_phone = #{familyPhone},</if>
+			<if test="selfCare != null">self_care = #{selfCare},</if>
+			<if test="mentalState != null">mental_state = #{mentalState},</if>
+			<if test="disease != null">disease = #{disease},</if>
+			<if test="assessmentResult != null">assessment_result = #{assessmentResult},</if>
+			<if test="suggestCareLevel != null">suggest_care_level = #{suggestCareLevel},</if>
+			<if test="assessor != null">assessor = #{assessor},</if>
+			<if test="assessTime != null">assess_time = #{assessTime},</if>
+			<if test="roomId != null">room_id = #{roomId},</if>
+			<if test="bedId != null">bed_id = #{bedId},</if>
+			<if test="careLevel != null">care_level = #{careLevel},</if>
+			<if test="nurseIds != null">nurse_ids = #{nurseIds},</if>
+			<if test="feeStandard != null">fee_standard = #{feeStandard},</if>
+			<if test="contractNo != null">contract_no = #{contractNo},</if>
+			<if test="contractStart != null">contract_start = #{contractStart},</if>
+			<if test="contractEnd != null">contract_end = #{contractEnd},</if>
+			<if test="contractFile != null">contract_file = #{contractFile},</if>
+			<if test="signDate != null">sign_date = #{signDate},</if>
+			<if test="checkinDate != null">checkin_date = #{checkinDate},</if>
+			<if test="remark != null">remark = #{remark},</if>
+			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		</set>
+		where checkin_id = #{checkinId}
+	</update>
+
+	<update id="updateCheckinStatus">
+		update biz_checkin
+		set apply_status = #{newStatus}, update_by = #{updateBy}, update_time = sysdate()
+		where checkin_id = #{checkinId} and apply_status = #{oldStatus}
+	</update>
+
+	<update id="updateCheckinAudit">
+		update biz_checkin
+		set audit_result = #{checkin.auditResult},
+			audit_opinion = #{checkin.auditOpinion},
+			auditor = #{checkin.auditor},
+			audit_time = sysdate(),
+			apply_status = #{newStatus},
+			update_by = #{checkin.updateBy},
+			update_time = sysdate()
+		where checkin_id = #{checkin.checkinId} and apply_status = '2'
+	</update>
+
+	<update id="updateCheckinFirstPay" parameterType="Checkin">
+		update biz_checkin
+		set pay_status = '1', first_bill_id = #{firstBillId},
+			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		where checkin_id = #{checkinId} and apply_status = '5'
+	</update>
+
+	<update id="updateCheckinComplete" parameterType="Checkin">
+		update biz_checkin
+		set apply_status = '6', checkin_date = #{checkinDate},
+			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		where checkin_id = #{checkinId} and apply_status = '5'
+	</update>
+
+	<update id="deleteCheckinByIds">
+		update biz_checkin set del_flag = '2', update_time = sysdate()
+		where checkin_id in
+		<foreach collection="array" item="checkinId" open="(" separator="," close=")">
+			#{checkinId}
+		</foreach>
+	</update>
+
+	<!-- 驳回后重新提交：9 已驳回 → 2 待审核，清空旧审核字段 -->
+	<update id="updateCheckinResubmit">
+		update biz_checkin
+		set apply_status = '2',
+			audit_result = null,
+			audit_opinion = null,
+			auditor = null,
+			audit_time = null,
+			update_by = #{updateBy},
+			update_time = sysdate()
+		where checkin_id = #{checkinId} and apply_status = '9'
+	</update>
+
+</mapper>

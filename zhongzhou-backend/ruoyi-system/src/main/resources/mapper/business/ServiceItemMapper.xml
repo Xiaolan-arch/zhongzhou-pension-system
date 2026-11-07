@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.ServiceItemMapper">
+
+	<resultMap type="ServiceItem" id="ServiceItemResult">
+		<id     property="itemId"      column="item_id"     />
+		<result property="itemName"    column="item_name"   />
+		<result property="price"       column="price"       />
+		<result property="unit"        column="unit"        />
+		<result property="image"       column="image"       />
+		<result property="description" column="description" />
+		<result property="status"      column="status"      />
+		<result property="tenantId"    column="tenant_id"   />
+		<result property="delFlag"     column="del_flag"    />
+		<result property="createBy"    column="create_by"   />
+		<result property="createTime"  column="create_time" />
+		<result property="updateBy"    column="update_by"   />
+		<result property="updateTime"  column="update_time" />
+	</resultMap>
+
+	<sql id="selectServiceItemVo">
+		select item_id, item_name, price, unit, image, description, status,
+		       tenant_id, del_flag, create_by, create_time, update_by, update_time
+		from biz_service_item
+	</sql>
+
+	<select id="selectServiceItemList" parameterType="ServiceItem" resultMap="ServiceItemResult">
+		<include refid="selectServiceItemVo"/>
+		<where>
+			del_flag = '0'
+			<if test="itemName != null and itemName != ''">
+				AND item_name like concat('%', #{itemName}, '%')
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+		order by item_id
+	</select>
+
+	<select id="selectServiceItemById" parameterType="Long" resultMap="ServiceItemResult">
+		<include refid="selectServiceItemVo"/>
+		where item_id = #{itemId} and del_flag = '0'
+	</select>
+
+	<insert id="insertServiceItem" parameterType="ServiceItem" useGeneratedKeys="true" keyProperty="itemId">
+		insert into biz_service_item(
+			item_name,
+			<if test="price != null">price,</if>
+			<if test="unit != null">unit,</if>
+			<if test="image != null">image,</if>
+			<if test="description != null">description,</if>
+			<if test="status != null">status,</if>
+			tenant_id,
+			del_flag,
+			create_by,
+			create_time
+		)values(
+			#{itemName},
+			<if test="price != null">#{price},</if>
+			<if test="unit != null">#{unit},</if>
+			<if test="image != null">#{image},</if>
+			<if test="description != null">#{description},</if>
+			<if test="status != null">#{status},</if>
+			#{tenantId},
+			'0',
+			#{createBy},
+			sysdate()
+		)
+	</insert>
+
+	<update id="updateServiceItem" parameterType="ServiceItem">
+		update biz_service_item
+		<set>
+			<if test="itemName != null and itemName != ''">item_name = #{itemName},</if>
+			<if test="price != null">price = #{price},</if>
+			<if test="unit != null">unit = #{unit},</if>
+			<if test="image != null">image = #{image},</if>
+			<if test="description != null">description = #{description},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		</set>
+		where item_id = #{itemId}
+	</update>
+
+	<update id="deleteServiceItemByIds" parameterType="Long">
+		update biz_service_item set del_flag = '2' where item_id in
+		<foreach collection="array" item="itemId" open="(" separator="," close=")">
+			#{itemId}
+		</foreach>
+	</update>
+
+</mapper>

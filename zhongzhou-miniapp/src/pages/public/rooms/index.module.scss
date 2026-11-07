@@ -1,0 +1,112 @@
+.page {
+  min-height: 100vh;
+  background: #f4f7f5;
+  padding: 24rpx;
+}
+
+.header {
+  background: linear-gradient(135deg, #2fa36b 0%, #2c5f4f 100%);
+  border-radius: 20rpx;
+  padding: 40rpx 32rpx;
+  margin-bottom: 32rpx;
+  color: #fff;
+}
+
+.headerTitle { display: block; font-size: 36rpx; font-weight: 600; }
+.headerDesc { display: block; font-size: 24rpx; opacity: 0.85; margin-top: 8rpx; }
+
+.list { display: flex; flex-direction: column; gap: 24rpx; }
+
+.roomCard {
+  background: #fff;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 16rpx rgba(31, 74, 61, 0.06);
+}
+
+.roomCover {
+  position: relative;
+}
+
+.roomImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: #eaf6ef;
+}
+
+.roomTag {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 10rpx 28rpx;
+  background: rgba(0, 0, 0, 0.55);
+  border-top-right-radius: 12rpx;
+}
+
+.roomTagText {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #fff;
+}
+
+.roomBadge {
+  position: absolute;
+  right: 16rpx;
+  top: 16rpx;
+  padding: 6rpx 18rpx;
+  border-radius: 999rpx;
+  background: rgba(47, 163, 107, 0.92);
+}
+
+.roomBadgeFull {
+  position: absolute;
+  right: 16rpx;
+  top: 16rpx;
+  padding: 6rpx 18rpx;
+  border-radius: 999rpx;
+  background: rgba(217, 122, 63, 0.92);
+}
+
+.roomBadgeText {
+  font-size: 22rpx;
+  color: #fff;
+}
+
+.roomContent {
+  padding: 24rpx 28rpx 28rpx;
+}
+
+.roomDesc {
+  display: block;
+  font-size: 24rpx;
+  color: #5b6e5f;
+  line-height: 1.8;
+}
+
+.roomFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20rpx;
+}
+
+.roomMetaText {
+  font-size: 24rpx;
+  color: #8a94a6;
+}
+
+.detailBtn {
+  background: #eaf6ef;
+  color: #2fa36b;
+  font-size: 24rpx;
+  padding: 10rpx 24rpx;
+  border-radius: 24rpx;
+}
+
+.loading, .empty, .error {
+  text-align: center;
+  padding: 120rpx 0;
+  font-size: 28rpx;
+  color: #8a94a6;
+}

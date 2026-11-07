@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.BillItemMapper">
+
+	<resultMap type="BillItem" id="BillItemResult">
+		<id     property="itemId"         column="item_id"         />
+		<result property="billId"         column="bill_id"         />
+		<result property="itemType"       column="item_type"       />
+		<result property="feeName"        column="fee_name"        />
+		<result property="serviceContent" column="service_content" />
+		<result property="amount"         column="amount"          />
+		<result property="tenantId"       column="tenant_id"       />
+		<result property="createTime"     column="create_time"     />
+	</resultMap>
+
+	<insert id="insertBillItem" parameterType="BillItem" useGeneratedKeys="true" keyProperty="itemId">
+		insert into biz_bill_item(
+			bill_id, item_type, fee_name, service_content, amount, tenant_id, create_time
+		)values(
+			#{billId}, #{itemType}, #{feeName}, #{serviceContent}, #{amount}, #{tenantId}, sysdate()
+		)
+	</insert>
+
+</mapper>

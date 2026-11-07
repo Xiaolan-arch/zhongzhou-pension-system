@@ -1,0 +1,187 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  padding: 48rpx $page-padding 120rpx;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+}
+
+.avatar {
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: $radius-round;
+  background: rgba(255, 255, 255, 0.24);
+  border: 4rpx solid rgba(255, 255, 255, 0.36);
+  @include flex-center;
+  flex-shrink: 0;
+}
+
+.avatarText {
+  font-size: 44rpx;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+}
+
+.heroInfo {
+  margin-left: $spacing-md;
+  min-width: 0;
+}
+
+.name {
+  display: block;
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+}
+
+.relation {
+  display: block;
+  margin-top: 6rpx;
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.content {
+  margin-top: -88rpx;
+  padding: 0 $page-padding calc(#{$spacing-xl} + env(safe-area-inset-bottom));
+}
+
+.card {
+  padding: $spacing-md $spacing-lg;
+  margin-bottom: $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-sm;
+}
+
+.cardTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+}
+
+.cardTip {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.elderItem {
+  margin-bottom: $spacing-sm;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  padding: $spacing-md 0;
+  border-top: 2rpx solid $color-divider;
+  &:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+  &:last-child {
+    padding-bottom: 0;
+  }
+  &:active {
+    opacity: 0.7;
+  }
+}
+
+.menuIcon {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: $radius-md;
+  background: $color-primary-soft;
+  @include flex-center;
+  flex-shrink: 0;
+}
+
+.menuIconText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-primary-dark;
+}
+
+.menuInfo {
+  flex: 1;
+  margin-left: $spacing-sm;
+  min-width: 0;
+}
+
+.menuTitle {
+  display: block;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+}
+
+.menuDesc {
+  display: block;
+  margin-top: 4rpx;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  @include text-ellipsis;
+}
+
+.arrow {
+  font-size: $font-size-lg;
+  color: $color-text-disabled;
+}
+
+.notice {
+  padding: $spacing-md;
+  background: $color-primary-soft;
+  border-radius: $radius-md;
+}
+
+.noticeTitle {
+  display: block;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-primary-dark;
+}
+
+.noticeText {
+  display: block;
+  margin-top: $spacing-xs;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+}
+
+.logout {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  margin-top: $spacing-lg;
+  border-radius: $radius-button;
+  background: $color-bg-card;
+  border: 2rpx solid $color-error;
+  color: $color-error;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.version {
+  display: block;
+  margin-top: $spacing-md;
+  font-size: $font-size-xs;
+  color: $color-text-disabled;
+  text-align: center;
+}

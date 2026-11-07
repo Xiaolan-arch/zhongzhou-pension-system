@@ -1,0 +1,232 @@
+@use '@/styles/variables.scss' as *;
+
+.pageRoot {
+  min-height: 100vh;
+  padding: 0 $page-padding calc(#{$spacing-xl} + env(safe-area-inset-bottom));
+  background: $color-bg-page;
+}
+
+.summary {
+  margin: $spacing-lg 0 $spacing-md;
+  padding: $spacing-lg;
+  border-radius: $radius-lg;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  box-shadow: $shadow-card;
+}
+
+.summaryLabel {
+  display: block;
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.summaryValue {
+  display: block;
+  margin-top: $spacing-xs;
+  font-size: 52rpx;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+}
+
+.summarySplit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: $spacing-sm;
+}
+
+.summarySub {
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.summaryPenalty {
+  display: block;
+  margin-top: $spacing-xs;
+  font-size: $font-size-xs;
+  color: #ffe1b8;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: $spacing-md 0 $spacing-sm;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+}
+
+.sectionTip {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.loading {
+  padding: 80rpx 0;
+  text-align: center;
+}
+
+.loadingText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.card {
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  &:active {
+    opacity: 0.94;
+  }
+}
+
+.cardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.monthBox {
+  display: flex;
+  flex-direction: column;
+}
+
+.statusBox {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.overdueTag {
+  margin-right: $spacing-xs;
+  padding: 4rpx 12rpx;
+  border-radius: $radius-xs;
+  background: $color-error-soft;
+  color: $color-error;
+  font-size: $font-size-xs;
+}
+
+.month {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+}
+
+.type {
+  margin-top: 4rpx;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.amountRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: $spacing-md;
+}
+
+.amountLabel {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.amountValue {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: $spacing-xs;
+}
+
+.meta {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.metaWarn {
+  font-size: $font-size-xs;
+  color: $color-error;
+}
+
+.penaltyRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: $spacing-xs;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-sm;
+  background: $color-warning-soft;
+}
+
+.penaltyText {
+  font-size: $font-size-xs;
+  color: $color-warning;
+}
+
+.payableText {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.quickRow {
+  display: flex;
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.quickBox {
+  flex: 1;
+  padding: $spacing-md;
+  border-radius: $radius-md;
+  background: $color-bg-card;
+  box-shadow: $shadow-card;
+}
+
+.quickLabel {
+  display: block;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.quickValue {
+  display: block;
+  margin-top: 6rpx;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-primary-dark;
+}
+
+.quickDesc {
+  display: block;
+  margin-top: 4rpx;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.cardBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: $spacing-sm;
+  padding-top: $spacing-sm;
+  border-top: 2rpx solid $color-divider;
+}
+
+.billNo {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.detailLink {
+  font-size: $font-size-xs;
+  color: $color-primary-dark;
+}

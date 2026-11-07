@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.RoomMapper">
+
+	<resultMap type="Room" id="RoomResult">
+		<id     property="roomId"      column="room_id"     />
+		<result property="floorNo"     column="floor_no"    />
+		<result property="roomNo"      column="room_no"     />
+		<result property="roomType"    column="room_type"   />
+		<result property="bedCount"    column="bed_count"   />
+		<result property="status"      column="status"      />
+		<result property="remark"      column="remark"      />
+		<result property="tenantId"    column="tenant_id"   />
+		<result property="delFlag"     column="del_flag"    />
+		<result property="createBy"    column="create_by"   />
+		<result property="createTime"  column="create_time" />
+		<result property="updateBy"    column="update_by"   />
+		<result property="updateTime"  column="update_time" />
+	</resultMap>
+
+	<sql id="selectRoomVo">
+		select room_id, floor_no, room_no, room_type, bed_count, status, remark,
+		       tenant_id, del_flag, create_by, create_time, update_by, update_time
+		from biz_room
+	</sql>
+
+	<select id="selectRoomList" parameterType="Room" resultMap="RoomResult">
+		<include refid="selectRoomVo"/>
+		<where>
+			del_flag = '0'
+			<if test="floorNo != null">
+				AND floor_no = #{floorNo}
+			</if>
+			<if test="roomNo != null and roomNo != ''">
+				AND room_no like concat('%', #{roomNo}, '%')
+			</if>
+			<if test="roomType != null and roomType != ''">
+				AND room_type = #{roomType}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+		order by floor_no, room_no
+	</select>
+
+	<select id="selectRoomById" parameterType="Long" resultMap="RoomResult">
+		<include refid="selectRoomVo"/>
+		where room_id = #{roomId} and del_flag = '0'
+	</select>
+
+	<insert id="insertRoom" parameterType="Room" useGeneratedKeys="true" keyProperty="roomId">
+		insert into biz_room(
+			floor_no,
+			room_no,
+			<if test="roomType != null">room_type,</if>
+			<if test="bedCount != null">bed_count,</if>
+			<if test="status != null">status,</if>
+			<if test="remark != null">remark,</if>
+			tenant_id,
+			del_flag,
+			create_by,
+			create_time
+		)values(
+			#{floorNo},
+			#{roomNo},
+			<if test="roomType != null">#{roomType},</if>
+			<if test="bedCount != null">#{bedCount},</if>
+			<if test="status != null">#{status},</if>
+			<if test="remark != null">#{remark},</if>
+			#{tenantId},
+			'0',
+			#{createBy},
+			sysdate()
+		)
+	</insert>
+
+	<update id="updateRoom" parameterType="Room">
+		update biz_room
+		<set>
+			<if test="floorNo != null">floor_no = #{floorNo},</if>
+			<if test="roomNo != null and roomNo != ''">room_no = #{roomNo},</if>
+			<if test="roomType != null">room_type = #{roomType},</if>
+			<if test="bedCount != null">bed_count = #{bedCount},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="remark != null">remark = #{remark},</if>
+			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		</set>
+		where room_id = #{roomId}
+	</update>
+
+	<update id="deleteRoomByIds" parameterType="Long">
+		update biz_room set del_flag = '2' where room_id in
+		<foreach collection="array" item="roomId" open="(" separator="," close=")">
+			#{roomId}
+		</foreach>
+	</update>
+
+</mapper>

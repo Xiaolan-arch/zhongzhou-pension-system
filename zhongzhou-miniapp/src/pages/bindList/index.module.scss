@@ -1,0 +1,41 @@
+.page { min-height: 100vh; background: #f4f7f5; padding: 24rpx; padding-bottom: 160rpx; }
+
+.newBtn {
+  position: fixed; right: 32rpx; bottom: 48rpx;
+  width: 100rpx; height: 100rpx; border-radius: 50%;
+  background: #2fa36b; color: #fff; font-size: 48rpx;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(47,163,107,0.35); z-index: 10;
+}
+
+.list { display: flex; flex-direction: column; gap: 20rpx; }
+
+.card {
+  background: #fff; border-radius: 16rpx; padding: 28rpx;
+}
+
+.cardRow { display: flex; justify-content: space-between; align-items: center; }
+
+.elder { font-size: 30rpx; font-weight: 600; color: #1f4a3d; }
+
+.tag {
+  font-size: 22rpx; padding: 6rpx 16rpx; border-radius: 16rpx;
+}
+.tag0 { background: #e3f3ea; color: #1f8a57; }
+.tag1 { background: #f0f0f0; color: #8a94a6; }
+
+.meta { font-size: 24rpx; color: #8a94a6; margin-top: 12rpx; }
+
+.footer {
+  display: flex; justify-content: flex-end; margin-top: 20rpx;
+  padding-top: 20rpx; border-top: 2rpx solid #f0f4f1;
+}
+
+.unbindBtn {
+  font-size: 24rpx; color: #c4473d; padding: 6rpx 16rpx;
+  border: 2rpx solid #c4473d; border-radius: 16rpx;
+}
+
+.loading, .empty {
+  text-align: center; padding: 120rpx 0; font-size: 28rpx; color: #8a94a6;
+}

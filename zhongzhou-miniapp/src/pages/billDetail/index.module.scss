@@ -1,0 +1,301 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+}
+
+.state {
+  min-height: 100vh;
+  padding: 160rpx $page-padding;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: $color-bg-page;
+}
+
+.stateText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.backButton {
+  @include button-reset;
+  width: 260rpx;
+  height: $button-height-md;
+  margin-top: $spacing-lg;
+  border-radius: $radius-button;
+  background: $color-primary-soft;
+  color: $color-primary-dark;
+  font-size: $font-size-sm;
+}
+
+.hero {
+  padding: 40rpx $page-padding 120rpx;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+}
+
+.heroTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.heroLabel {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.heroAmount {
+  display: block;
+  margin-top: $spacing-sm;
+  font-size: 60rpx;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+}
+
+.heroSplit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: $spacing-xs;
+}
+
+.heroSub {
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.heroPenalty {
+  display: block;
+  margin-top: $spacing-xs;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-sm;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: $font-size-xs;
+  color: #ffe1b8;
+}
+
+.content {
+  margin-top: -88rpx;
+  padding: 0 $page-padding calc(#{$spacing-xl} + env(safe-area-inset-bottom));
+}
+
+.card {
+  padding: $spacing-md $spacing-lg $spacing-lg;
+  margin-bottom: $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+}
+
+.cardTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 10rpx 0;
+  margin-top: 4rpx;
+  border-top: 2rpx solid $color-divider;
+}
+
+.rowLabel {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  flex-shrink: 0;
+}
+
+.rowValue {
+  margin-left: $spacing-md;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  text-align: right;
+  flex: 1;
+}
+
+.itemsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-sm;
+}
+
+.itemCount {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.emptyText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: $spacing-sm 0;
+  border-top: 2rpx solid $color-divider;
+}
+
+.itemInfo {
+  flex: 1;
+  min-width: 0;
+  margin-right: $spacing-md;
+}
+
+.itemName {
+  display: block;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
+.itemContent {
+  display: block;
+  margin-top: 4rpx;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  line-height: $line-height-normal;
+}
+
+.itemAmount {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  flex-shrink: 0;
+}
+
+.totalRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: $spacing-xs;
+  padding-top: $spacing-sm;
+  border-top: 2rpx solid $color-divider;
+}
+
+.totalLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.totalValue {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-primary-dark;
+}
+
+.record {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-sm 0;
+  border-top: 2rpx solid $color-divider;
+}
+
+.recordInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.recordAmount {
+  display: block;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-primary-dark;
+}
+
+.recordMeta {
+  display: block;
+  margin-top: 4rpx;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.recordOperator {
+  margin-left: $spacing-md;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  flex-shrink: 0;
+}
+
+.payCard {
+  padding: $spacing-lg;
+  margin-top: $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+}
+
+.payButton {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  border-radius: $radius-button;
+  background: $color-primary;
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+}
+
+.payHint {
+  display: block;
+  margin-top: $spacing-sm;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  text-align: center;
+}
+
+.tip {
+  display: block;
+  margin-top: $spacing-md;
+  font-size: $font-size-xs;
+  color: $color-text-disabled;
+  line-height: $line-height-loose;
+  text-align: center;
+}
+
+.invoiceCard {
+  display: flex;
+  align-items: center;
+  margin-top: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+}
+
+.invoiceInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.invoiceTitle {
+  display: block;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.invoiceDesc {
+  display: block;
+  margin-top: 4rpx;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.invoiceBtn {
+  padding: 12rpx 28rpx;
+  border-radius: $radius-button;
+  border: 2rpx solid $color-primary;
+}
+
+.invoiceBtnText {
+  font-size: $font-size-sm;
+  color: $color-primary-dark;
+  font-weight: $font-weight-semibold;
+}

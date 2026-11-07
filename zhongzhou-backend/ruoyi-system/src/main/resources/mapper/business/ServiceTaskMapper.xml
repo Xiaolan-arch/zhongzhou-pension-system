@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.ServiceTaskMapper">
+
+	<resultMap type="ServiceTask" id="ServiceTaskResult">
+		<id     property="taskId"      column="task_id"      />
+		<result property="orderId"     column="order_id"     />
+		<result property="orderNo"     column="order_no"     />
+		<result property="elderId"     column="elder_id"     />
+		<result property="elderName"   column="elder_name"   />
+		<result property="itemId"      column="item_id"      />
+		<result property="itemName"    column="item_name"    />
+		<result property="nurseId"     column="nurse_id"     />
+		<result property="nurseName"   column="nurse_name"   />
+		<result property="serviceDate" column="service_date" />
+		<result property="planTime"    column="plan_time"    />
+		<result property="taskStatus"  column="task_status"  />
+		<result property="feedback"    column="feedback"     />
+		<result property="remark"      column="remark"       />
+		<result property="tenantId"    column="tenant_id"    />
+		<result property="delFlag"     column="del_flag"     />
+		<result property="createBy"    column="create_by"    />
+		<result property="createTime"  column="create_time"  />
+		<result property="updateBy"    column="update_by"    />
+		<result property="updateTime"  column="update_time"  />
+	</resultMap>
+
+	<sql id="selectServiceTaskVo">
+		select task_id, order_id, order_no, elder_id, elder_name, item_id, item_name,
+		       nurse_id, nurse_name, service_date, plan_time, task_status, feedback, remark,
+		       tenant_id, del_flag, create_by, create_time, update_by, update_time
+		from biz_service_task
+	</sql>
+
+	<insert id="insertServiceTask" parameterType="ServiceTask" useGeneratedKeys="true" keyProperty="taskId">
+		insert into biz_service_task(
+			order_id, order_no, elder_id, elder_name, item_id, item_name,
+			nurse_id, nurse_name, service_date, plan_time, task_status, remark,
+			tenant_id, del_flag, create_by, create_time
+		)values(
+			#{orderId}, #{orderNo}, #{elderId}, #{elderName}, #{itemId}, #{itemName},
+			#{nurseId}, #{nurseName}, #{serviceDate}, #{planTime}, #{taskStatus}, #{remark},
+			#{tenantId}, '0', #{createBy}, sysdate()
+		)
+	</insert>
+
+	<!-- 当天仍待执行、且计划时间已过的任务 -->
+	<select id="selectOverdueTasks" resultMap="ServiceTaskResult">
+		<include refid="selectServiceTaskVo"/>
+		where del_flag = '0'
+		  and task_status = '0'
+		  and service_date = #{serviceDate}
+		  and plan_time is not null
+		  and plan_time &lt;= #{now}
+		order by plan_time asc, task_id asc
+	</select>
+
+	<update id="updateTaskOverdue">
+		update biz_service_task
+		set task_status = '4', update_time = sysdate()
+		where task_id = #{taskId} and task_status = '0'
+	</update>
+
+	<!-- 护理任务列表查询 -->
+	<select id="selectServiceTaskList" parameterType="ServiceTask" resultMap="ServiceTaskResult">
+		<include refid="selectServiceTaskVo"/>
+		<where>
+			del_flag = '0'
+			<if test="orderNo != null and orderNo != ''">and order_no like concat('%', #{orderNo}, '%')</if>
+			<if test="elderName != null and elderName != ''">and elder_name like concat('%', #{elderName}, '%')</if>
+			<if test="nurseName != null and nurseName != ''">and nurse_name like concat('%', #{nurseName}, '%')</if>
+			<if test="itemName != null and itemName != ''">and item_name like concat('%', #{itemName}, '%')</if>
+			<if test="taskStatus != null and taskStatus != ''">and task_status = #{taskStatus}</if>
+			<if test="params.beginTime != null and params.beginTime != ''">
+				and service_date &gt;= str_to_date(#{params.beginTime}, '%Y-%m-%d')
+			</if>
+			<if test="params.endTime != null and params.endTime != ''">
+				and service_date &lt;= str_to_date(#{params.endTime}, '%Y-%m-%d')
+			</if>
+		</where>
+		order by service_date desc, plan_time desc, task_id desc
+	</select>
+
+	<!-- 更新任务状态，完成时附带执行反馈 -->
+	<update id="updateTaskStatus">
+		update biz_service_task
+		set task_status = #{taskStatus},
+			<if test="feedback != null and feedback != ''">feedback = #{feedback},</if>
+			update_time = sysdate(),
+			update_by = #{updateBy}
+		where task_id = #{taskId} and del_flag = '0'
+	</update>
+
+</mapper>

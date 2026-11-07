@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.ChatMapper">
+
+	<resultMap type="ChatSession" id="ChatSessionResult">
+		<id     property="sessionId"  column="session_id"  />
+		<result property="tenantId"   column="tenant_id"   />
+		<result property="familyId"   column="family_id"   />
+		<result property="elderId"    column="elder_id"    />
+		<result property="title"      column="title"       />
+		<result property="delFlag"    column="del_flag"    />
+		<result property="createBy"   column="create_by"   />
+		<result property="createTime" column="create_time" />
+		<result property="updateBy"   column="update_by"   />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+
+	<resultMap type="ChatMessage" id="ChatMessageResult">
+		<id     property="msgId"      column="msg_id"      />
+		<result property="sessionId"  column="session_id"  />
+		<result property="role"       column="role"        />
+		<result property="content"    column="content"     />
+		<result property="tokens"     column="tokens"      />
+		<result property="createTime" column="create_time" />
+	</resultMap>
+
+	<sql id="selectSessionVo">
+		select session_id, tenant_id, family_id, elder_id, title,
+		       del_flag, create_by, create_time, update_by, update_time
+		from biz_chat_session
+	</sql>
+
+	<sql id="selectMessageVo">
+		select msg_id, session_id, role, content, tokens, create_time
+		from biz_chat_message
+	</sql>
+
+	<select id="selectSessionList" parameterType="ChatSession" resultMap="ChatSessionResult">
+		<include refid="selectSessionVo"/>
+		<where>
+			del_flag = '0'
+			<if test="tenantId != null">
+				AND tenant_id = #{tenantId}
+			</if>
+			<if test="familyId != null">
+				AND family_id = #{familyId}
+			</if>
+		</where>
+		order by session_id desc
+	</select>
+
+	<select id="selectSessionById" parameterType="Long" resultMap="ChatSessionResult">
+		<include refid="selectSessionVo"/>
+		where session_id = #{sessionId} and del_flag = '0'
+	</select>
+
+	<insert id="insertSession" parameterType="ChatSession" useGeneratedKeys="true" keyProperty="sessionId">
+		insert into biz_chat_session(
+			tenant_id,
+			family_id,
+			<if test="elderId != null">elder_id,</if>
+			<if test="title != null">title,</if>
+			del_flag,
+			create_time
+		)values(
+			#{tenantId},
+			#{familyId},
+			<if test="elderId != null">#{elderId},</if>
+			<if test="title != null">#{title},</if>
+			'0',
+			sysdate()
+		)
+	</insert>
+
+	<update id="updateSession" parameterType="ChatSession">
+		update biz_chat_session
+		<set>
+			<if test="elderId != null">elder_id = #{elderId},</if>
+			<if test="title != null">title = #{title},</if>
+			update_time = sysdate()
+		</set>
+		where session_id = #{sessionId} and del_flag = '0'
+	</update>
+
+	<select id="selectMessageList" resultMap="ChatMessageResult">
+		<include refid="selectMessageVo"/>
+		where session_id = #{sessionId}
+		order by msg_id asc
+		<if test="limit != null">
+			limit #{limit}
+		</if>
+	</select>
+
+	<insert id="insertMessage" parameterType="ChatMessage" useGeneratedKeys="true" keyProperty="msgId">
+		insert into biz_chat_message(
+			session_id,
+			role,
+			content,
+			<if test="tokens != null">tokens,</if>
+			create_time
+		)values(
+			#{sessionId},
+			#{role},
+			#{content},
+			<if test="tokens != null">#{tokens},</if>
+			sysdate()
+		)
+	</insert>
+
+</mapper>

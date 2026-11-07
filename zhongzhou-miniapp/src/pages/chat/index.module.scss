@@ -1,0 +1,125 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: $color-bg-page;
+}
+
+.elderBar {
+  padding: $spacing-md $page-padding 0;
+}
+
+.messageList {
+  flex: 1;
+  padding: $spacing-md $page-padding;
+  box-sizing: border-box;
+}
+
+.tips {
+  padding: $spacing-lg 0;
+  text-align: center;
+}
+
+.tipsText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  line-height: $line-height-loose;
+}
+
+.row {
+  display: flex;
+  margin-bottom: $spacing-md;
+}
+
+.rowUser {
+  justify-content: flex-end;
+}
+
+.rowAssistant {
+  justify-content: flex-start;
+}
+
+.avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: $radius-round;
+  flex-shrink: 0;
+  @include flex-center;
+  font-size: $font-size-sm;
+}
+
+.avatarAssistant {
+  background: $color-primary;
+  color: $color-text-white;
+  margin-right: $spacing-sm;
+}
+
+.avatarUser {
+  background: $color-primary-soft;
+  color: $color-primary-dark;
+  margin-left: $spacing-sm;
+}
+
+.bubble {
+  max-width: 520rpx;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-lg;
+  font-size: $font-size-md;
+  line-height: $line-height-normal;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.bubbleUser {
+  background: $color-primary;
+  color: $color-text-white;
+  border-top-right-radius: $radius-xs;
+}
+
+.bubbleAssistant {
+  background: $color-bg-card;
+  color: $color-text-primary;
+  border-top-left-radius: $radius-xs;
+  box-shadow: $shadow-card;
+}
+
+.thinking {
+  color: $color-text-tertiary;
+}
+
+.inputBar {
+  display: flex;
+  align-items: center;
+  padding: $spacing-sm $page-padding calc(#{$spacing-sm} + env(safe-area-inset-bottom));
+  background: $color-bg-card;
+  box-shadow: $shadow-float;
+}
+
+.input {
+  flex: 1;
+  height: 72rpx;
+  padding: 0 $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-button;
+  font-size: $font-size-md;
+}
+
+.sendBtn {
+  margin-left: $spacing-sm;
+  padding: 0 $spacing-lg;
+  height: 72rpx;
+  border-radius: $radius-button;
+  background: $color-primary;
+  color: $color-text-white;
+  font-size: $font-size-md;
+  @include flex-center;
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.sendBtnDisabled {
+  background: $color-text-disabled;
+}

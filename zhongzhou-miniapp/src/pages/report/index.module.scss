@@ -1,0 +1,171 @@
+@use '@/styles/variables.scss' as *;
+
+.pageRoot {
+  min-height: 100vh;
+  padding: 0 $page-padding calc(#{$spacing-xl} + env(safe-area-inset-bottom));
+  background: $color-bg-page;
+}
+
+.header {
+  padding: $spacing-lg 0 $spacing-md;
+}
+
+.title {
+  display: block;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+}
+
+.subtitle {
+  display: block;
+  margin-top: 6rpx;
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  padding: $spacing-lg $spacing-md;
+  margin-bottom: $spacing-md;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+}
+
+.summaryItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.summaryValue {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+}
+
+.summaryLabel {
+  margin-top: 6rpx;
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.summaryDivider {
+  width: 2rpx;
+  height: 56rpx;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.loading {
+  padding: 80rpx 0;
+  text-align: center;
+}
+
+.loadingText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  &:active {
+    opacity: 0.94;
+  }
+}
+
+.scoreBadge {
+  width: 108rpx;
+  height: 108rpx;
+  border-radius: $radius-round;
+  @include flex-center;
+  flex-direction: column;
+  flex-shrink: 0;
+  background: $color-bg-hover;
+}
+
+.scoreGood {
+  background: $color-primary-soft;
+  .scoreValue {
+    color: $color-risk-good;
+  }
+}
+
+.scoreWatch {
+  background: $color-warning-soft;
+  .scoreValue {
+    color: $color-risk-watch;
+  }
+}
+
+.scoreWarn {
+  background: $color-error-soft;
+  .scoreValue {
+    color: $color-risk-warn;
+  }
+}
+
+.scoreValue {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+}
+
+.scoreUnit {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.cardInfo {
+  flex: 1;
+  margin-left: $spacing-md;
+  min-width: 0;
+}
+
+.cardTitle {
+  display: block;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  @include text-ellipsis;
+}
+
+.cardMeta {
+  display: block;
+  margin-top: 6rpx;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  @include text-ellipsis;
+}
+
+.cardBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: $spacing-xs;
+}
+
+.cardTime {
+  font-size: $font-size-xs;
+  color: $color-text-disabled;
+}
+
+.arrow {
+  margin-left: $spacing-sm;
+  font-size: $font-size-lg;
+  color: $color-text-disabled;
+}
+
+.tip {
+  display: block;
+  margin-top: $spacing-md;
+  font-size: $font-size-xs;
+  color: $color-text-disabled;
+  line-height: $line-height-loose;
+  text-align: center;
+}

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.MedicationMapper">
+
+	<resultMap type="Medication" id="MedicationResult">
+		<id     property="medicationId" column="medication_id" />
+		<result property="elderId"      column="elder_id"      />
+		<result property="elderName"    column="elder_name"    />
+		<result property="tenantId"     column="tenant_id"     />
+		<result property="medicineName" column="medicine_name" />
+		<result property="dosage"       column="dosage"        />
+		<result property="frequency"    column="frequency"     />
+		<result property="timePoints"   column="time_points"   />
+		<result property="startDate"    column="start_date"    />
+		<result property="endDate"      column="end_date"      />
+		<result property="status"       column="status"        />
+		<result property="remark"       column="remark"        />
+		<result property="delFlag"      column="del_flag"      />
+		<result property="createBy"     column="create_by"     />
+		<result property="createTime"   column="create_time"   />
+		<result property="updateBy"     column="update_by"     />
+		<result property="updateTime"   column="update_time"   />
+	</resultMap>
+
+	<sql id="selectMedicationVo">
+		select medication_id, elder_id, elder_name, tenant_id, medicine_name, dosage, frequency,
+		       time_points, start_date, end_date, status, remark,
+		       del_flag, create_by, create_time, update_by, update_time
+		from biz_medication
+	</sql>
+
+	<select id="selectMedicationList" parameterType="Medication" resultMap="MedicationResult">
+		<include refid="selectMedicationVo"/>
+		<where>
+			del_flag = '0'
+			<if test="tenantId != null">
+				AND tenant_id = #{tenantId}
+			</if>
+			<if test="elderId != null">
+				AND elder_id = #{elderId}
+			</if>
+			<if test="elderName != null and elderName != ''">
+				AND elder_name like concat('%', #{elderName}, '%')
+			</if>
+			<if test="medicineName != null and medicineName != ''">
+				AND medicine_name like concat('%', #{medicineName}, '%')
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+		order by medication_id desc
+	</select>
+
+	<select id="selectMedicationById" parameterType="Long" resultMap="MedicationResult">
+		<include refid="selectMedicationVo"/>
+		where medication_id = #{medicationId} and del_flag = '0'
+	</select>
+
+	<insert id="insertMedication" parameterType="Medication" useGeneratedKeys="true" keyProperty="medicationId">
+		insert into biz_medication(
+			elder_id,
+			<if test="elderName != null">elder_name,</if>
+			tenant_id,
+			medicine_name,
+			<if test="dosage != null">dosage,</if>
+			<if test="frequency != null">frequency,</if>
+			<if test="timePoints != null">time_points,</if>
+			<if test="startDate != null">start_date,</if>
+			<if test="endDate != null">end_date,</if>
+			<if test="status != null">status,</if>
+			<if test="remark != null">remark,</if>
+			del_flag,
+			<if test="createBy != null">create_by,</if>
+			create_time
+		)values(
+			#{elderId},
+			<if test="elderName != null">#{elderName},</if>
+			#{tenantId},
+			#{medicineName},
+			<if test="dosage != null">#{dosage},</if>
+			<if test="frequency != null">#{frequency},</if>
+			<if test="timePoints != null">#{timePoints},</if>
+			<if test="startDate != null">#{startDate},</if>
+			<if test="endDate != null">#{endDate},</if>
+			<if test="status != null">#{status},</if>
+			<if test="remark != null">#{remark},</if>
+			'0',
+			<if test="createBy != null">#{createBy},</if>
+			sysdate()
+		)
+	</insert>
+
+	<update id="updateMedication" parameterType="Medication">
+		update biz_medication
+		<set>
+			<if test="elderId != null">elder_id = #{elderId},</if>
+			<if test="elderName != null">elder_name = #{elderName},</if>
+			<if test="medicineName != null">medicine_name = #{medicineName},</if>
+			<if test="dosage != null">dosage = #{dosage},</if>
+			<if test="frequency != null">frequency = #{frequency},</if>
+			<if test="timePoints != null">time_points = #{timePoints},</if>
+			<if test="startDate != null">start_date = #{startDate},</if>
+			<if test="endDate != null">end_date = #{endDate},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="remark != null">remark = #{remark},</if>
+			<if test="updateBy != null">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		</set>
+		where medication_id = #{medicationId}
+	</update>
+
+	<update id="deleteMedicationByIds" parameterType="Long">
+		update biz_medication set del_flag = '2' where medication_id in
+		<foreach collection="array" item="medicationId" open="(" separator="," close=")">
+			#{medicationId}
+		</foreach>
+	</update>
+
+</mapper>

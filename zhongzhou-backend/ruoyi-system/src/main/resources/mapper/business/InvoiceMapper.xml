@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.InvoiceMapper">
+
+	<resultMap type="Invoice" id="InvoiceResult">
+		<id     property="invoiceId" column="invoice_id" />
+		<result property="billId"    column="bill_id"    />
+		<result property="billNo"    column="bill_no"    />
+		<result property="elderId"   column="elder_id"   />
+		<result property="elderName" column="elder_name" />
+		<result property="tenantId"  column="tenant_id"  />
+		<result property="title"     column="title"      />
+		<result property="taxNo"     column="tax_no"     />
+		<result property="amount"    column="amount"     />
+		<result property="email"     column="email"      />
+		<result property="status"    column="status"     />
+		<result property="invoiceNo" column="invoice_no" />
+		<result property="remark"    column="remark"     />
+		<result property="delFlag"   column="del_flag"   />
+		<result property="createBy"  column="create_by"  />
+		<result property="createTime" column="create_time" />
+		<result property="updateBy"  column="update_by"  />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+
+	<sql id="selectInvoiceVo">
+		select invoice_id, bill_id, bill_no, elder_id, elder_name, tenant_id, title, tax_no, amount,
+		       email, status, invoice_no, remark, del_flag, create_by, create_time, update_by, update_time
+		from biz_invoice
+	</sql>
+
+	<select id="selectInvoiceList" parameterType="Invoice" resultMap="InvoiceResult">
+		<include refid="selectInvoiceVo"/>
+		<where>
+			del_flag = '0'
+			<if test="tenantId != null">
+				AND tenant_id = #{tenantId}
+			</if>
+			<if test="elderId != null">
+				AND elder_id = #{elderId}
+			</if>
+			<if test="elderName != null and elderName != ''">
+				AND elder_name like concat('%', #{elderName}, '%')
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="billNo != null and billNo != ''">
+				AND bill_no like concat('%', #{billNo}, '%')
+			</if>
+			<if test="billId != null">
+				AND bill_id = #{billId}
+			</if>
+		</where>
+		order by invoice_id desc
+	</select>
+
+	<select id="selectInvoiceById" parameterType="Long" resultMap="InvoiceResult">
+		<include refid="selectInvoiceVo"/>
+		where invoice_id = #{invoiceId} and del_flag = '0'
+	</select>
+
+	<insert id="insertInvoice" parameterType="Invoice" useGeneratedKeys="true" keyProperty="invoiceId">
+		insert into biz_invoice(
+			<if test="billId != null">bill_id,</if>
+			<if test="billNo != null">bill_no,</if>
+			<if test="elderId != null">elder_id,</if>
+			<if test="elderName != null">elder_name,</if>
+			tenant_id,
+			title,
+			<if test="taxNo != null">tax_no,</if>
+			<if test="amount != null">amount,</if>
+			<if test="email != null">email,</if>
+			<if test="status != null">status,</if>
+			<if test="remark != null">remark,</if>
+			del_flag,
+			<if test="createBy != null">create_by,</if>
+			create_time
+		)values(
+			<if test="billId != null">#{billId},</if>
+			<if test="billNo != null">#{billNo},</if>
+			<if test="elderId != null">#{elderId},</if>
+			<if test="elderName != null">#{elderName},</if>
+			#{tenantId},
+			#{title},
+			<if test="taxNo != null">#{taxNo},</if>
+			<if test="amount != null">#{amount},</if>
+			<if test="email != null">#{email},</if>
+			<if test="status != null">#{status},</if>
+			<if test="remark != null">#{remark},</if>
+			'0',
+			<if test="createBy != null">#{createBy},</if>
+			sysdate()
+		)
+	</insert>
+
+	<update id="updateInvoice" parameterType="Invoice">
+		update biz_invoice
+		<set>
+			<if test="status != null">status = #{status},</if>
+			<if test="invoiceNo != null">invoice_no = #{invoiceNo},</if>
+			<if test="title != null">title = #{title},</if>
+			<if test="taxNo != null">tax_no = #{taxNo},</if>
+			<if test="amount != null">amount = #{amount},</if>
+			<if test="email != null">email = #{email},</if>
+			<if test="remark != null">remark = #{remark},</if>
+			<if test="updateBy != null">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		</set>
+		where invoice_id = #{invoiceId}
+	</update>
+
+	<update id="deleteInvoiceByIds" parameterType="Long">
+		update biz_invoice set del_flag = '2' where invoice_id in
+		<foreach collection="array" item="invoiceId" open="(" separator="," close=")">
+			#{invoiceId}
+		</foreach>
+	</update>
+
+</mapper>

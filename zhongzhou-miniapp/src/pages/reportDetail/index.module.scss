@@ -1,0 +1,255 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+}
+
+.state {
+  min-height: 100vh;
+  padding: 160rpx $page-padding;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: $color-bg-page;
+}
+
+.stateText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.backButton {
+  @include button-reset;
+  width: 260rpx;
+  height: $button-height-md;
+  margin-top: $spacing-lg;
+  border-radius: $radius-button;
+  background: $color-primary-soft;
+  color: $color-primary-dark;
+  font-size: $font-size-sm;
+}
+
+.hero {
+  padding: 40rpx $page-padding 120rpx;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+}
+
+.heroTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.heroTitle {
+  flex: 1;
+  margin-right: $spacing-sm;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-white;
+  @include text-ellipsis;
+}
+
+.heroMain {
+  display: flex;
+  align-items: center;
+  margin-top: $spacing-md;
+}
+
+.scoreBox {
+  width: 152rpx;
+  height: 152rpx;
+  border-radius: $radius-round;
+  background: rgba(255, 255, 255, 0.2);
+  border: 4rpx solid rgba(255, 255, 255, 0.36);
+  @include flex-center;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.scoreValue {
+  font-size: 52rpx;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+}
+
+.scoreUnit {
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.heroInfo {
+  margin-left: $spacing-md;
+  min-width: 0;
+}
+
+.elderName {
+  display: block;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $color-text-white;
+}
+
+.heroMeta {
+  display: block;
+  margin-top: 8rpx;
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.86);
+  line-height: $line-height-loose;
+}
+
+.content {
+  margin-top: -88rpx;
+  padding: 0 $page-padding calc(#{$spacing-xl} + env(safe-area-inset-bottom));
+}
+
+.summaryCard {
+  padding: $spacing-md $spacing-lg;
+  margin-bottom: $spacing-md;
+  background: $color-primary-soft;
+  border-radius: $radius-lg;
+}
+
+.summaryTitle {
+  display: block;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-primary-dark;
+}
+
+.summaryText {
+  display: block;
+  margin-top: $spacing-xs;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+}
+
+.card {
+  padding: $spacing-md $spacing-lg $spacing-lg;
+  margin-bottom: $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+}
+
+.cardTitle {
+  display: block;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  margin-bottom: $spacing-sm;
+}
+
+.emptyText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  margin: $spacing-md 0 $spacing-xs;
+}
+
+.headingBar {
+  width: 6rpx;
+  height: 30rpx;
+  border-radius: $radius-xs;
+  background: $color-primary;
+  margin-right: $spacing-xs;
+}
+
+.headingText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.subHeading {
+  display: block;
+  margin: $spacing-sm 0 6rpx;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.paragraph {
+  display: block;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+  margin-top: $spacing-xs;
+}
+
+.listItem {
+  display: flex;
+  align-items: flex-start;
+  margin-top: $spacing-xs;
+}
+
+.dot {
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: $radius-round;
+  background: $color-primary-light;
+  margin: 12rpx $spacing-xs 0 0;
+  flex-shrink: 0;
+}
+
+.listText {
+  flex: 1;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+}
+
+.quote {
+  margin-top: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  background: $color-bg-page;
+  border-left: 6rpx solid $color-primary-light;
+  border-radius: $radius-xs;
+}
+
+.quoteText {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+}
+
+.divider {
+  height: 2rpx;
+  background: $color-divider;
+  margin: $spacing-md 0;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 10rpx 0;
+  border-top: 2rpx solid $color-divider;
+}
+
+.rowLabel {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  flex-shrink: 0;
+}
+
+.rowValue {
+  margin-left: $spacing-md;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  text-align: right;
+  flex: 1;
+}
+
+.tip {
+  display: block;
+  margin-top: $spacing-md;
+  font-size: $font-size-xs;
+  color: $color-text-disabled;
+  line-height: $line-height-loose;
+  text-align: center;
+}

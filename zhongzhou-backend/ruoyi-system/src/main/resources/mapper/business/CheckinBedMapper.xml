@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.CheckinBedMapper">
+
+	<update id="occupyBed">
+		update biz_bed set status = '1', elder_id = #{elderId}, update_time = sysdate()
+		where bed_id = #{bedId} and tenant_id = #{tenantId} and status = '0' and elder_id is null and del_flag = '0'
+	</update>
+
+	<update id="releaseBedByElder">
+		update biz_bed set status = '0', elder_id = null, update_time = sysdate()
+		where elder_id = #{elderId} and tenant_id = #{tenantId} and del_flag = '0'
+	</update>
+
+	<select id="selectElderIdByIdCard" resultType="Long">
+		select elder_id from biz_elder
+		where id_card = #{idCard} and tenant_id = #{tenantId} and del_flag = '0'
+		limit 1
+	</select>
+
+	<select id="selectElderIdByName" resultType="Long">
+		select elder_id from biz_elder
+		where elder_name = #{elderName} and tenant_id = #{tenantId} and del_flag = '0'
+		order by elder_id asc
+		limit 1
+	</select>
+
+	<insert id="insertElderByCheckin" parameterType="Checkin">
+		insert into biz_elder(
+			elder_name, gender, id_card, birthday, age, phone, address, care_level, checkin_date,
+			status, avatar, family_name, family_relation, family_phone, tenant_id, del_flag,
+			create_by, create_time, remark
+		)values(
+			#{elderName}, #{gender}, #{idCard}, #{birthday}, #{age}, #{phone}, #{address}, #{careLevel}, #{checkinDate},
+			'2', #{avatar}, #{familyName}, #{familyRelation}, #{familyPhone}, #{tenantId}, '0',
+			#{createBy}, sysdate(), #{remark}
+		)
+	</insert>
+
+	<update id="updateElderByCheckin">
+		update biz_elder
+		set status = '0',
+			<if test="checkin.careLevel != null">care_level = #{checkin.careLevel},</if>
+			<if test="checkin.checkinDate != null">checkin_date = #{checkin.checkinDate},</if>
+			<if test="checkin.updateBy != null and checkin.updateBy != ''">update_by = #{checkin.updateBy},</if>
+			update_time = sysdate()
+		where elder_id = #{elderId} and del_flag = '0'
+	</update>
+
+	<update id="updateElderStatus">
+		update biz_elder set status = #{status}, update_time = sysdate()
+		where elder_id = #{elderId} and tenant_id = #{tenantId} and del_flag = '0'
+	</update>
+
+</mapper>

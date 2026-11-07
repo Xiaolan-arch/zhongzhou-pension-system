@@ -1,0 +1,185 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #2fa36b 0%, #5bc08d 320rpx, $color-bg-page 620rpx);
+  padding: 0 $page-padding calc(#{$spacing-xl} + env(safe-area-inset-bottom));
+}
+
+.header {
+  padding: 56rpx 8rpx 48rpx;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: 48rpx;
+  padding: 0 20rpx;
+  border-radius: $radius-button;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.badgeText {
+  font-size: $font-size-xs;
+  color: $color-text-white;
+  letter-spacing: 2rpx;
+}
+
+.title {
+  display: block;
+  margin-top: $spacing-lg;
+  font-size: 48rpx;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+}
+
+.subtitle {
+  display: block;
+  margin-top: $spacing-xs;
+  font-size: $font-size-md;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.formCard {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-card;
+  padding: 40rpx 32rpx;
+}
+
+.label {
+  display: block;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-xs;
+}
+
+.input {
+  height: 96rpx;
+  padding: 0 $spacing-md;
+  margin-bottom: $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  font-size: $font-size-lg;
+}
+
+.codeRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+}
+
+.codeInput {
+  flex: 1;
+  height: 96rpx;
+  padding: 0 $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  font-size: $font-size-lg;
+}
+
+.codeButton {
+  @include button-reset;
+  width: 230rpx;
+  height: 80rpx;
+  margin-left: $spacing-sm;
+  border-radius: $radius-button;
+  background: $color-primary-soft;
+  border: 2rpx solid $color-primary;
+  color: $color-primary-dark;
+  font-size: $font-size-sm;
+  white-space: nowrap;
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.demoHint {
+  display: flex;
+  align-items: center;
+  padding: $spacing-sm $spacing-md;
+  margin-top: $spacing-sm;
+  background: $color-warning-soft;
+  border-radius: $radius-md;
+}
+
+.demoLabel {
+  font-size: $font-size-xs;
+  color: #b9702a;
+  margin-right: $spacing-sm;
+}
+
+.demoCode {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: #b9702a;
+  letter-spacing: 4rpx;
+}
+
+.loginButton {
+  @include button-reset;
+  width: 100%;
+  height: $button-height-lg;
+  margin-top: $spacing-lg;
+  border-radius: $radius-button;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  color: $color-text-white;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  border: none;
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
+
+.tip {
+  display: block;
+  margin-top: $spacing-md;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  text-align: center;
+}
+
+.demoAccounts {
+  margin-top: $spacing-lg;
+  padding: $spacing-md $spacing-lg;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: $radius-lg;
+}
+
+.demoTitle {
+  display: block;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-sm;
+}
+
+.demoItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-sm 0;
+  border-top: 2rpx solid $color-divider;
+  &:active {
+    opacity: 0.7;
+  }
+}
+
+.demoName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.demoElder {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-left: $spacing-xs;
+}
+
+.demoPhone {
+  font-size: $font-size-sm;
+  color: $color-primary-dark;
+  font-weight: $font-weight-medium;
+}

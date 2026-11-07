@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.VisitMapper">
+
+	<resultMap type="Visit" id="VisitResult">
+		<id     property="visitId"       column="visit_id"      />
+		<result property="visitType"     column="visit_type"    />
+		<result property="visitorName"   column="visitor_name"  />
+		<result property="visitorPhone"  column="visitor_phone" />
+		<result property="elderId"       column="elder_id"      />
+		<result property="elderName"     column="elder_name"    />
+		<result property="visitDate"     column="visit_date"    />
+		<result property="visitTime"     column="visit_time"    />
+		<result property="peopleCount"   column="people_count"  />
+		<result property="status"        column="status"        />
+		<result property="visitCode"     column="visit_code"    />
+		<result property="checkinTime"   column="checkin_time"  />
+		<result property="remark"        column="remark"        />
+		<result property="tenantId"      column="tenant_id"     />
+		<result property="delFlag"       column="del_flag"      />
+		<result property="createBy"      column="create_by"     />
+		<result property="createTime"    column="create_time"   />
+		<result property="updateBy"      column="update_by"     />
+		<result property="updateTime"    column="update_time"   />
+	</resultMap>
+
+	<sql id="selectVisitVo">
+		select visit_id, visit_type, visitor_name, visitor_phone, elder_id, elder_name,
+		       visit_date, visit_time, people_count, status, visit_code, checkin_time, remark,
+		       tenant_id, del_flag, create_by, create_time, update_by, update_time
+		from biz_visit
+	</sql>
+
+	<select id="selectVisitList" parameterType="Visit" resultMap="VisitResult">
+		<include refid="selectVisitVo"/>
+		<where>
+			del_flag = '0'
+			<if test="visitorName != null and visitorName != ''">
+				AND visitor_name like concat('%', #{visitorName}, '%')
+			</if>
+			<if test="visitType != null and visitType != ''">
+				AND visit_type = #{visitType}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="elderName != null and elderName != ''">
+				AND elder_name like concat('%', #{elderName}, '%')
+			</if>
+		</where>
+		order by visit_id desc
+	</select>
+
+	<select id="selectVisitById" parameterType="Long" resultMap="VisitResult">
+		<include refid="selectVisitVo"/>
+		where visit_id = #{visitId} and del_flag = '0'
+	</select>
+
+	<insert id="insertVisit" parameterType="Visit" useGeneratedKeys="true" keyProperty="visitId">
+		insert into biz_visit(
+			<if test="visitType != null">visit_type,</if>
+			visitor_name,
+			<if test="visitorPhone != null">visitor_phone,</if>
+			<if test="elderId != null">elder_id,</if>
+			<if test="elderName != null">elder_name,</if>
+			<if test="visitDate != null">visit_date,</if>
+			<if test="visitTime != null">visit_time,</if>
+			<if test="peopleCount != null">people_count,</if>
+			<if test="status != null">status,</if>
+			<if test="visitCode != null">visit_code,</if>
+			<if test="remark != null">remark,</if>
+			tenant_id,
+			del_flag,
+			create_by,
+			create_time
+		)values(
+			<if test="visitType != null">#{visitType},</if>
+			#{visitorName},
+			<if test="visitorPhone != null">#{visitorPhone},</if>
+			<if test="elderId != null">#{elderId},</if>
+			<if test="elderName != null">#{elderName},</if>
+			<if test="visitDate != null">#{visitDate},</if>
+			<if test="visitTime != null">#{visitTime},</if>
+			<if test="peopleCount != null">#{peopleCount},</if>
+			<if test="status != null">#{status},</if>
+			<if test="visitCode != null">#{visitCode},</if>
+			<if test="remark != null">#{remark},</if>
+			#{tenantId},
+			'0',
+			#{createBy},
+			sysdate()
+		)
+	</insert>
+
+	<update id="updateVisit" parameterType="Visit">
+		update biz_visit
+		<set>
+			<if test="visitType != null">visit_type = #{visitType},</if>
+			<if test="visitorName != null and visitorName != ''">visitor_name = #{visitorName},</if>
+			<if test="visitorPhone != null">visitor_phone = #{visitorPhone},</if>
+			<if test="elderId != null">elder_id = #{elderId},</if>
+			<if test="elderName != null">elder_name = #{elderName},</if>
+			<if test="visitDate != null">visit_date = #{visitDate},</if>
+			<if test="visitTime != null">visit_time = #{visitTime},</if>
+			<if test="peopleCount != null">people_count = #{peopleCount},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="remark != null">remark = #{remark},</if>
+			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			update_time = sysdate()
+		</set>
+		where visit_id = #{visitId}
+	</update>
+
+	<update id="deleteVisitByIds" parameterType="Long">
+		update biz_visit set del_flag = '2' where visit_id in
+		<foreach collection="array" item="visitId" open="(" separator="," close=")">
+			#{visitId}
+		</foreach>
+	</update>
+
+	<update id="confirmVisitById">
+		update biz_visit set status = '1', update_by = #{updateBy}, update_time = sysdate()
+		where visit_id = #{visitId} and status = '0'
+	</update>
+
+	<update id="cancelVisitById">
+		update biz_visit set status = '3', update_by = #{updateBy}, update_time = sysdate()
+		where visit_id = #{visitId} and status != '3'
+	</update>
+
+	<update id="checkinVisitById">
+		update biz_visit
+		set status = '2', checkin_time = sysdate(), update_by = #{updateBy}, update_time = sysdate()
+		where visit_id = #{visitId} and status in ('0', '1') and del_flag = '0'
+	</update>
+
+</mapper>
